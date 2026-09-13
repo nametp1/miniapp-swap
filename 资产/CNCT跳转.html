@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · CNCT</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --rose: #e11d48;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --green-border: #a7f3d0;
+      --purple-border: #ddd6fe;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan-border: #a5f3fc;
+      --chain-1: #1677ff;
+      --chain-2: #36cfc9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+    .i22 { font-size: 22px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    /* ================= 可用余额 ================= */
+    .hero-balance {
+      position: relative;
+      overflow: hidden;
+      margin: 6px 16px 14px;
+      padding: 24px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(22, 119, 255, .1), rgba(54, 207, 201, .18));
+      border: 1px solid rgba(22, 119, 255, .18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 16px 32px -24px rgba(22, 119, 255, .6);
+      text-align: center;
+      animation: rise .45s ease backwards;
+    }
+
+    .hero-balance::before {
+      content: '';
+      position: absolute;
+      top: -62px;
+      right: -42px;
+      width: 152px;
+      height: 152px;
+      border-radius: 50%;
+      background: rgba(22, 119, 255, .07);
+    }
+
+    .hero-balance::after {
+      content: '';
+      position: absolute;
+      bottom: -56px;
+      left: -38px;
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      background: rgba(54, 207, 201, .1);
+    }
+
+    .hero-balance .k {
+      position: relative;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .3px;
+    }
+
+    .hero-balance .amt {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 10px;
+      font-feature-settings: "tnum";
+    }
+
+    .hero-balance .amt b {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -1.2px;
+      background: linear-gradient(135deg, var(--chain-1), var(--chain-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-balance .amt span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--chain-1);
+    }
+
+    /* ================= 链上凭证（收款地址 + 私钥，同卡分区） ================= */
+    .cred-card {
+      margin: 0 16px 14px;
+      padding: 4px 16px 14px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .05s;
+    }
+
+    .cred-row {
+      padding-top: 14px;
+    }
+
+    .cred-row + .cred-row {
+      margin-top: 14px;
+      border-top: 1px solid var(--line-2);
+    }
+
+    .cred-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .cred-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .cred-name .icon {
+      color: var(--chain-1);
+    }
+
+    .cred-act {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      background: var(--blue-soft);
+      color: var(--chain-1);
+      font-size: 11.5px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cred-act:active {
+      background: #dbeafe;
+    }
+
+    .cred-act.warn {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .cred-act.warn:active {
+      background: var(--amber-border);
+    }
+
+    .cred-val {
+      font-family: "SF Mono", "Roboto Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      letter-spacing: -.2px;
+      color: var(--ink-2);
+      word-break: break-all;
+    }
+
+    .cred-val.masked {
+      color: var(--muted-2);
+      letter-spacing: 2px;
+    }
+
+    .cred-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line-2);
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--muted-2);
+    }
+
+    .cred-note .icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+      color: var(--amber);
+    }
+
+    /* ================= 划入 ================= */
+    .op-card {
+      margin: 0 16px 14px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .1s;
+    }
+
+    .op-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .op-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .op-name .icon {
+      color: var(--chain-1);
+    }
+
+    .amt-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+    }
+
+    .amt-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.5px;
+      font-feature-settings: "tnum";
+      width: 100%;
+    }
+
+    .amt-input::placeholder {
+      color: var(--muted-2);
+      font-weight: 600;
+    }
+
+    .amt-unit {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .all-btn {
+      padding: 6px 12px;
+      border-radius: 9px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .all-btn:active {
+      background: var(--brand-border);
+    }
+
+    .ok-banner {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .ok-banner.show {
+      display: flex;
+      animation: rise .3s ease backwards;
+    }
+
+    /* ================= 操作按钮 ================= */
+    .primary-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      margin-top: 14px;
+      padding: 15px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--chain-1) 0%, var(--chain-2) 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 12px 26px -14px rgba(22, 119, 255, .9);
+      transition: transform .15s;
+    }
+
+    .primary-btn:active {
+      transform: scale(.985);
+    }
+
+    .primary-btn:disabled {
+      opacity: .5;
+      box-shadow: none;
+    }
+
+    .ghost-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: calc(100% - 32px);
+      margin: 0 16px 24px;
+      padding: 13px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      color: var(--ink-3);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .ghost-btn:active {
+      transform: scale(.985);
+    }
+
+    /* ================= 支付密码弹窗 ================= */
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-mask.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 414px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.2, .8, .3, 1);
+      max-height: 88vh;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* 确定按钮固定在 sheet 最底部，不随内容多少浮动 */
+    .modal-sheet > .modal-btn:last-child,
+    .modal-sheet > .modal-actions:last-child {
+      margin-top: auto;
+    }
+
+    .modal-mask.show .modal-sheet {
+      transform: none;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--line-2);
+      color: var(--muted);
+    }
+
+    .modal-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--amber);
+    }
+
+    .modal-tip .icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .modal-sub {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 16px 0 8px;
+    }
+
+    .pwd-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pwd-cell {
+      flex: 1;
+      height: 46px;
+      border-radius: 11px;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      text-align: center;
+      outline: none;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .pwd-cell:focus {
+      border-color: var(--chain-1);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(22, 119, 255, .1);
+    }
+
+    .pwd-cell.filled {
+      background: #fff;
+      border-color: rgba(22, 119, 255, .35);
+    }
+
+    .modal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--chain-1), var(--chain-2));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 12px 26px -14px rgba(22, 119, 255, .9);
+      transition: transform .15s;
+    }
+
+    .modal-btn:active {
+      transform: scale(.985);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 60px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="12" height="12" rx="2" />
+        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5" />
+        <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19" />
+      </symbol>
+      <symbol id="i-down" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <line x1="9" y1="13" x2="15" y2="13" />
+        <line x1="9" y1="17" x2="15" y2="17" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="3" y="11" width="18" height="11" rx="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="../资产页面.html" title="返回资产首页">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">CNCT</div>
+    <div class="icon-btn" style="visibility:hidden;"></div>
+  </header>
+
+  <!-- ================= 可用余额 ================= -->
+  <section class="hero-balance">
+    <span class="k">可用余额</span>
+    <div class="amt">
+      <b id="cnctBal">8.60</b>
+      <span>CNCT</span>
+    </div>
+  </section>
+
+  <!-- ================= 链上凭证：收款地址 + 私钥（同卡分区） ================= -->
+  <section class="cred-card">
+    <div class="cred-row">
+      <div class="cred-top">
+        <span class="cred-name">
+          <svg class="icon i14"><use href="#i-link" /></svg>
+          收款地址
+        </span>
+        <button class="cred-act" onclick="copyAddr()">
+          <svg class="icon i12"><use href="#i-copy" /></svg>
+          复制
+        </button>
+      </div>
+      <div class="cred-val" id="chainAddr">0x</div>
+    </div>
+
+    <div class="cred-row">
+      <div class="cred-top">
+        <span class="cred-name">
+          <svg class="icon i14"><use href="#i-shield" /></svg>
+          私钥
+        </span>
+        <button class="cred-act warn" id="keyCopyBtn" onclick="openPwd()">
+          <svg class="icon i12"><use href="#i-lock" /></svg>
+          复制
+        </button>
+      </div>
+      <div class="cred-val masked" id="privKey">••••••••••••••••••••••••</div>
+    </div>
+
+    <div class="cred-note">
+      <svg class="icon i12"><use href="#i-shield" /></svg>
+      <span>该地址仅用于接收 CNCT，转入其他币种无法找回；私钥需验证支付密码后可查看。</span>
+    </div>
+  </section>
+
+  <!-- ================= 划入 ================= -->
+  <section class="op-card">
+    <div class="op-head">
+      <span class="op-name">
+        <svg class="icon i14"><use href="#i-down" /></svg>
+        划入数量
+      </span>
+      <button class="all-btn" onclick="fillAll()">全部</button>
+    </div>
+    <div class="amt-row">
+      <input class="amt-input" id="amtInput" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00">
+      <span class="amt-unit">CNCT</span>
+    </div>
+    <div class="ok-banner" id="okBanner">
+      <svg class="icon i14"><use href="#i-check" /></svg>
+      <span id="okText"></span>
+    </div>
+    <button class="primary-btn" id="depositBtn" onclick="deposit()">
+      <svg class="icon i16"><use href="#i-down" /></svg>
+      确认划入
+    </button>
+  </section>
+
+  <a class="ghost-btn" href="资产账单.html?asset=CNCT">
+    <svg class="icon i14"><use href="#i-list" /></svg>
+    查看数权宝账单
+  </a>
+
+  <!-- ================= 支付密码弹窗 ================= -->
+  <div class="modal-mask" id="pwdModal" onclick="maskClose(event)">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <div class="modal-title">输入支付密码</div>
+        <button class="modal-close" onclick="closePwd()">
+          <svg class="icon i14"><use href="#i-x" /></svg>
+        </button>
+      </div>
+
+      <div class="modal-tip">
+        <svg class="icon i14"><use href="#i-shield" /></svg>
+        <span>私钥等同于该地址的资产控制权，任何人获得后即可转走全部 CNCT，请勿截图或转发。</span>
+      </div>
+
+      <div class="modal-sub">请输入 6 位支付密码，验证后复制私钥</div>
+      <div class="pwd-row" id="pwdRow">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 0)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 1)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 2)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 3)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 4)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 5)">
+      </div>
+      <button class="modal-btn" onclick="confirmKey()">
+        <svg class="icon i16"><use href="#i-lock" /></svg>
+        确认并复制私钥
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       状态（与 SWAP 其他页共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v2';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [], myOrders: [], deals: [], records: [],
+        assets: { vc: 0, cnct: 8.60, redpacket: 10.00 }
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && typeof s.gpBalance === 'number') {
+            s.assets = s.assets || { vc: 0, cnct: 8.60, redpacket: 10.00 };
+            return s;
+          }
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+      return s;
+    }
+
+    const ST = loadState();
+    const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function saveState() {
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(ST)); } catch (e) { /* 忽略 */ }
+    }
+
+    /* ================= 生成 CNCT 收款地址与私钥 ================= */
+    function genHex(len) {
+      const hex = '0123456789abcdef';
+      let s = '0x';
+      for (let i = 0; i < len; i++) s += hex[Math.floor(Math.random() * 16)];
+      return s;
+    }
+
+    if (!ST.chainAddress || !ST.chainPrivKey) {
+      if (!ST.chainAddress) ST.chainAddress = genHex(40);
+      if (!ST.chainPrivKey) ST.chainPrivKey = genHex(64);
+      saveState();
+    }
+
+    const balEl = document.getElementById('cnctBal');
+    const addrEl = document.getElementById('chainAddr');
+    const inputEl = document.getElementById('amtInput');
+    const btnEl = document.getElementById('depositBtn');
+
+    balEl.textContent = fmt(ST.assets.cnct || 0);
+    addrEl.textContent = ST.chainAddress;
+
+    /* ================= 复制地址 / 私钥 ================= */
+    function copyText(txt, okMsg) {
+      const done = () => showToast(okMsg);
+      const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { showToast('复制失败，请手动长按复制'); }
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function copyAddr() {
+      copyText(ST.chainAddress, 'CNCT 收款地址已复制');
+    }
+
+    /* ================= 私钥：验证支付密码后查看并复制 ================= */
+    let keyUnlocked = false;
+
+    function openPwd() {
+      if (keyUnlocked) return copyPrivKey();
+      document.querySelectorAll('#pwdRow .pwd-cell').forEach(c => { c.value = ''; c.classList.remove('filled'); });
+      document.getElementById('pwdModal').classList.add('show');
+      setTimeout(() => document.querySelectorAll('#pwdRow .pwd-cell')[0].focus(), 320);
+    }
+
+    function closePwd() {
+      document.getElementById('pwdModal').classList.remove('show');
+    }
+
+    function maskClose(e) {
+      if (e.target === e.currentTarget) closePwd();
+    }
+
+    function onPwd(el, idx) {
+      el.classList.toggle('filled', !!el.value);
+      const cells = document.querySelectorAll('#pwdRow .pwd-cell');
+      if (el.value && idx < cells.length - 1) cells[idx + 1].focus();
+      if (!el.value && idx > 0) cells[idx - 1].focus();
+    }
+
+    function confirmKey() {
+      const code = [...document.querySelectorAll('#pwdRow .pwd-cell')].map(c => c.value).join('');
+      if (code.length < 6) return showToast('请输入 6 位支付密码');
+      keyUnlocked = true;
+      closePwd();
+
+      const el = document.getElementById('privKey');
+      el.textContent = ST.chainPrivKey;
+      el.classList.remove('masked');
+      document.getElementById('keyCopyBtn').innerHTML =
+        '<svg class="icon i12"><use href="#i-copy" /></svg>复制';
+
+      setTimeout(copyPrivKey, 260);
+    }
+
+    function copyPrivKey() {
+      copyText(ST.chainPrivKey, '私钥已复制，请妥善保管');
+    }
+
+    /* ================= 全部 ================= */
+    function fillAll() {
+      inputEl.value = (ST.assets.cnct || 0).toFixed(2);
+      inputEl.focus();
+    }
+
+    /* ================= 划入 ================= */
+    let depositing = false;
+    function deposit() {
+      if (depositing) return;
+      const avail = Number(ST.assets.cnct || 0);
+      const amt = parseFloat(inputEl.value);
+      if (!amt || isNaN(amt) || amt <= 0) {
+        showToast('请输入划入数量');
+        return;
+      }
+      if (amt > avail + 1e-9) {
+        showToast('划入数量超过可用余额');
+        return;
+      }
+      depositing = true;
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<svg class="icon i16"><use href="#i-down" /></svg>上链确认中…';
+      showToast('CNCT 正在上链划入…');
+      setTimeout(() => {
+        const left = Math.max(0, avail - amt);
+        ST.assets.cnct = Number(left.toFixed(2));
+        saveState();
+        balEl.textContent = fmt(ST.assets.cnct);
+        inputEl.value = '';
+        document.getElementById('okText').textContent =
+          '已划入 ' + fmt(amt) + ' CNCT，上链确认成功';
+        document.getElementById('okBanner').classList.add('show');
+        btnEl.disabled = false;
+        btnEl.innerHTML = '<svg class="icon i16"><use href="#i-down" /></svg>确认划入';
+        depositing = false;
+        if (left <= 0) {
+          btnEl.disabled = true;
+          btnEl.style.opacity = '.5';
+        }
+      }, 1100);
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg, ms) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), ms || 2400);
+    }
+  </script>
+</body>
+
+</html>

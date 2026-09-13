@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · OTC 交易详情</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --green-border: #a7f3d0;
+      --amber: #059669;
+      --amber-soft: #ecfdf5;
+      --amber-border: #a7f3d0;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --cyan-border: #a5f3fc;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --purple-border: #ddd6fe;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 130px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input {
+      font-family: inherit;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+      background: var(--bg);
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ================= 状态主卡 ================= */
+    .status-hero {
+      position: relative;
+      overflow: hidden;
+      margin: 0 16px 16px;
+      padding: 22px 18px 20px;
+      border-radius: 20px;
+      color: #fff;
+      text-align: center;
+      animation: rise .45s ease backwards;
+      background: linear-gradient(135deg, #00b86c 0%, #059669 100%);
+      box-shadow: 0 14px 30px -16px rgba(0, 184, 108, .85);
+    }
+
+    .status-hero.is-pay {
+      background: linear-gradient(135deg, #00b86c 0%, #0891b2 100%);
+      box-shadow: 0 14px 30px -16px rgba(0, 184, 108, .85);
+    }
+
+    .status-hero.is-done {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 14px 30px -16px rgba(5, 150, 105, .85);
+    }
+
+    .status-hero.is-wait {
+      background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
+      box-shadow: 0 14px 30px -16px rgba(59, 130, 246, .85);
+    }
+
+    .status-hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -36px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .13);
+    }
+
+    .status-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .sh-amount {
+      position: relative;
+      margin-top: 10px;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      font-feature-settings: "tnum";
+    }
+
+    .sh-amount b {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .sh-label {
+      position: relative;
+      margin-top: 5px;
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    .sh-title {
+      position: relative;
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .sh-sub {
+      position: relative;
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.6;
+      opacity: .92;
+    }
+
+    /* ================= 通用 ================= */
+    .block-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 0 16px 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .block-label .lb-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .block-label .lb-left .icon {
+      color: var(--brand);
+    }
+
+    .block-label .lb-right {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .card {
+      margin: 0 16px 16px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .05s;
+    }
+
+    /* ================= 进度流程节点 ================= */
+    .flow-item {
+      display: flex;
+      gap: 11px;
+    }
+
+    .flow-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .flow-dot {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: var(--line-2);
+      border: 1.5px solid var(--line);
+    }
+
+    .flow-dot .icon {
+      stroke-width: 3;
+    }
+
+    .flow-item.is-done .flow-dot {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--brand-soft);
+    }
+
+    .flow-item.is-now .flow-dot {
+      background: #fff;
+      border: 2px solid var(--brand);
+      box-shadow: 0 0 0 4px var(--brand-soft);
+    }
+
+    .flow-item.is-now .flow-dot::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+
+    .flow-line {
+      flex: 1;
+      width: 2px;
+      margin: 4px 0 2px;
+      border-radius: 2px;
+      background: var(--line);
+    }
+
+    .flow-item.is-done .flow-line {
+      background: var(--brand-border);
+    }
+
+    .flow-item:last-child .flow-line {
+      display: none;
+    }
+
+    .flow-body {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 15px;
+    }
+
+    .flow-item:last-child .flow-body {
+      padding-bottom: 0;
+    }
+
+    .flow-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .flow-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .flow-item.is-todo .flow-name {
+      color: var(--muted-2);
+    }
+
+    .flow-val {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--brand);
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+
+    .flow-item.is-todo .flow-val,
+    .flow-val.pending {
+      color: var(--muted-2);
+      font-weight: 700;
+    }
+
+    .flow-time {
+      margin-top: 3px;
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    /* 当前环节角色胶囊：待我 / 待对方 */
+    .flow-tag {
+      margin-left: auto;
+      padding: 1.5px 6px;
+      border-radius: 7px;
+      font-size: 9.5px;
+      font-weight: 800;
+      white-space: nowrap;
+      color: var(--muted);
+      background: var(--line-2);
+    }
+
+    .flow-tag.me {
+      color: var(--brand);
+      background: var(--brand-soft);
+    }
+
+    /* 已取消：终止节点走灰底 + 叉，不套用品牌色 */
+    .flow-item.is-cancel .flow-dot {
+      color: var(--muted-2);
+      background: var(--line-2);
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .flow-item.is-cancel .flow-name {
+      color: var(--muted-2);
+    }
+
+    /* 已完成节点：执行方 + 发生时间 */
+    .flow-time b {
+      font-weight: 700;
+      color: var(--ink-3);
+    }
+
+    .flow-time b.me {
+      color: var(--brand);
+    }
+
+    /* ================= 展开收起 ================= */
+    .detail-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      margin-top: 12px;
+      padding: 9px 0;
+      border-radius: 12px;
+      background: var(--line-2);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .detail-toggle .icon {
+      transition: transform .25s;
+      color: var(--muted);
+    }
+
+    .detail-toggle.open .icon {
+      transform: rotate(180deg);
+    }
+
+    .detail-panel {
+      display: none;
+      margin-top: 10px;
+      padding: 2px 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .detail-panel.show {
+      display: block;
+      animation: rise .3s ease backwards;
+    }
+
+    /* ================= 订单信息 ================= */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      border-bottom: 1px dashed var(--line-2);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row .v {
+      font-weight: 700;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+      text-align: right;
+      word-break: break-all;
+    }
+
+    .info-row .v.brand {
+      color: var(--brand);
+    }
+
+    .info-row .v.rose {
+      color: var(--rose);
+    }
+
+    .info-row .v.amber {
+      color: var(--amber);
+    }
+
+    /* ================= 须知 ================= */
+    .notice {
+      margin: 0 16px 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      border: 1px solid var(--blue-border);
+      font-size: 11.5px;
+      line-height: 1.8;
+      color: var(--ink-3);
+      animation: rise .45s ease backwards;
+      animation-delay: .14s;
+    }
+
+    .notice .nt-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .notice b {
+      color: var(--ink);
+    }
+
+    /* ================= 底部操作栏 ================= */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 414px;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+      animation: rise .4s ease backwards;
+    }
+
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 13px;
+      border-radius: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .15s;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(.98);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff;
+      box-shadow: 0 10px 22px -12px rgba(0, 184, 108, .9);
+    }
+
+    .btn.warn {
+      background: linear-gradient(135deg, #00b86c, #059669);
+      color: #fff;
+      box-shadow: 0 10px 22px -12px rgba(0, 184, 108, .9);
+    }
+
+    .btn.ghost {
+      background: #fff;
+      color: var(--ink-3);
+      border: 1.5px dashed var(--line);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .btn.done-btn {
+      background: var(--brand-soft);
+      color: var(--brand-3);
+    }
+
+    /* ================= 弹窗 ================= */
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-mask.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 414px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.2, .8, .3, 1);
+      max-height: 88vh;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .modal-mask.show .modal-sheet {
+      transform: none;
+    }
+
+    /* 内容过长时底部操作按钮常驻可见 */
+    .modal-sheet > .modal-btn:last-child,
+    .modal-sheet > .modal-actions:last-child {
+      position: sticky;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      z-index: 3;
+      flex-shrink: 0;
+      box-shadow: 0 calc(18px + env(safe-area-inset-bottom)) 0 0 #fff, 0 -12px 16px -10px rgba(15, 23, 42, .18);
+      margin-top: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--line-2);
+      color: var(--muted);
+    }
+
+    .modal-sub {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .modal-sub b {
+      color: var(--ink);
+    }
+
+    .modal-sub .rose {
+      color: var(--rose);
+      font-weight: 700;
+    }
+
+    .modal-sub .brand {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    /* 支付信息行 */
+    .pay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      border-bottom: 1px dashed var(--line-2);
+    }
+
+    .pay-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .pay-row .v {
+      font-weight: 700;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+      text-align: right;
+    }
+
+    .pay-row .v.big {
+      font-size: 17px;
+      color: var(--rose);
+      letter-spacing: -.3px;
+    }
+
+    /* 支付密码 */
+    .pwd-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pwd-cell {
+      flex: 1;
+      height: 46px;
+      border-radius: 11px;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      text-align: center;
+      outline: none;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .pwd-cell:focus {
+      border-color: var(--brand);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 184, 108, .1);
+    }
+
+    .pwd-cell.filled {
+      background: #fff;
+      border-color: var(--brand-border);
+    }
+
+    .modal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .modal-btn.warn {
+      background: linear-gradient(135deg, #00b86c, #059669);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 150px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .empty {
+      padding: 60px 24px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted-2);
+    }
+
+    /* ================= 详情增强 ================= */
+    .warn-bar {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 0 16px 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      animation: rise .45s ease backwards;
+      animation-delay: .04s;
+    }
+
+    .warn-bar .icon {
+      color: var(--amber);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .warn-bar > div > b {
+      display: block;
+      font-size: 12.5px;
+      color: var(--amber);
+      margin-bottom: 3px;
+    }
+
+    .warn-bar span {
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--ink-3);
+    }
+
+    .warn-bar span b {
+      color: var(--amber);
+      font-weight: 800;
+    }
+
+    .info-sep-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted-2);
+      letter-spacing: .3px;
+      margin: 14px 0 2px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line-2);
+    }
+
+    .info-sep-title:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .copy-btn {
+      margin-left: 6px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--line-2);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    .copy-btn:active {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-chev-d" viewBox="0 0 24 24">
+        <polyline points="6 9 12 15 18 9" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24">
+        <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
+        <path d="M16 12h.01" />
+        <path d="M3 7h13a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5" />
+      </symbol>
+      <symbol id="i-card" viewBox="0 0 24 24">
+        <rect x="2" y="5" width="20" height="14" rx="2.5" />
+        <line x1="2" y1="10" x2="22" y2="10" />
+        <line x1="6" y1="15" x2="10" y2="15" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4" y="10" width="16" height="11" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </symbol>
+      <symbol id="i-arrows-ud" viewBox="0 0 24 24">
+        <polyline points="8 8 12 4 16 8" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+        <polyline points="8 16 12 20 16 16" />
+      </symbol>
+      <symbol id="i-clock-wait" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 7 12 12 15.5 14" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </symbol>
+      <symbol id="i-info" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <line x1="9" y1="13" x2="15" y2="13" />
+        <line x1="9" y1="17" x2="15" y2="17" />
+      </symbol>
+      <symbol id="i-store" viewBox="0 0 24 24">
+        <path d="M3 9l1.5-5h15L21 9" />
+        <path d="M4 9v11h16V9" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-flask" viewBox="0 0 24 24">
+        <path d="M9 3h6v5l4 9a2 2 0 0 1-1.8 3H6.8A2 2 0 0 1 5 17l4-9V3z" />
+        <line x1="7" y1="13" x2="17" y2="13" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="OTC寄售.html" title="返回交易大厅">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">交易详情</div>
+    <div class="icon-btn" style="visibility:hidden;"></div>
+  </header>
+
+  <div id="content"></div>
+
+  <!-- ================= 买方确认支付弹窗 ================= -->
+  <div class="modal-mask" id="payModal" onclick="maskClose(event)">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <div class="modal-title">确认支付</div>
+        <button class="modal-close" onclick="closeModal('payModal')">
+          <svg class="icon i14"><use href="#i-x" /></svg>
+        </button>
+      </div>
+      <div class="pay-row">
+        <span>订单号</span>
+        <span class="v" id="payOrderId"></span>
+      </div>
+      <div class="pay-row">
+        <span>收款方</span>
+        <span class="v" id="paySeller"></span>
+      </div>
+      <div class="pay-row">
+        <span>购买数量</span>
+        <span class="v" id="payQty"></span>
+      </div>
+      <div class="pay-row">
+        <span>支付金额</span>
+        <span class="v big" id="payAmount"></span>
+      </div>
+
+      <button class="modal-btn" id="payConfirmBtn" onclick="confirmPay()">
+        <svg class="icon i16"><use href="#i-check" /></svg>
+        <span id="payBtnText">确认支付</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= 卖方放行：支付密码弹窗 ================= -->
+  <div class="modal-mask" id="pwdModal" onclick="maskClose(event)">
+    <div class="modal-sheet">
+      <div class="modal-head">
+        <div class="modal-title">输入支付密码放行</div>
+        <button class="modal-close" onclick="closeModal('pwdModal')">
+          <svg class="icon i14"><use href="#i-x" /></svg>
+        </button>
+      </div>
+      <div class="modal-sub" id="pwdSub"></div>
+      <div class="pwd-row" id="pwdRow">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 0)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 1)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 2)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 3)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 4)">
+        <input class="pwd-cell" type="password" inputmode="numeric" maxlength="1" oninput="onPwd(this, 5)">
+      </div>
+      <button class="modal-btn warn" onclick="confirmRelease()">
+        <svg class="icon i16"><use href="#i-lock" /></svg>
+        确认放行 <span id="pwdQty">GP</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       共享状态（与 OTC寄售 / OTC-我的挂单 共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v3';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [
+          { id: 'M1001', side: 'sell', price: 1.00, qty: 500, party: 'UID 8826 4471', uid: '8826 4471', credit: '优秀', time: '2 分钟前' },
+          { id: 'M1002', side: 'sell', price: 1.02, qty: 300, party: 'UID 8826 6093', uid: '8826 6093', credit: '良好', time: '6 分钟前' },
+          { id: 'M1003', side: 'buy', price: 0.98, qty: 200, party: 'UID 8826 3388', uid: '8826 3388', credit: '优秀', time: '9 分钟前' },
+          { id: 'M1004', side: 'buy', price: 0.96, qty: 800, party: 'UID 8826 2210', uid: '8826 2210', credit: '良好', time: '14 分钟前' }
+        ],
+        myOrders: [
+          { id: 'G2005', side: 'sell', price: 1.10, qty: 60, filled: 0, status: 'pending', time: '09-13 11:20' },
+          { id: 'G2001', side: 'sell', price: 1.00, qty: 100, filled: 0, status: 'pending', time: '09-13 10:12' },
+          { id: 'G2002', side: 'sell', price: 1.05, qty: 200, filled: 120, status: 'part', time: '09-12 21:40' },
+          { id: 'G2003', side: 'buy', price: 0.95, qty: 150, filled: 150, status: 'done', time: '09-11 15:08' },
+          { id: 'G2004', side: 'sell', price: 1.20, qty: 80, filled: 0, status: 'cancel', time: '09-10 09:33' }
+        ],
+        /* 成交子单：fromOrder 指回产生它的挂单；无 fromOrder = 我在大厅吃下别人的挂单 */
+        deals: [
+          { id: 'OTC20260913005', role: 'buyer', price: 1.02, qty: 150, amount: 153, status: 'wait_pay', party: 'UID 8826 6093', uid: '8826 6093', time: '09-13 11:05' },
+          { id: 'OTC20260913001', role: 'seller', price: 1.00, qty: 100, amount: 100, status: 'wait_pay', party: 'UID 8826 3388', uid: '8826 3388', time: '09-13 10:14', fromOrder: 'G2001' },
+          { id: 'OTC20260912002', role: 'seller', price: 1.05, qty: 80, amount: 84, status: 'wait_release', party: 'UID 8826 4471', uid: '8826 4471', time: '09-12 21:42', paidTime: '09-12 21:58', payMethod: 'bank', fromOrder: 'G2002' },
+          { id: 'OTC20260912001', role: 'seller', price: 1.05, qty: 40, amount: 42, status: 'done', party: 'UID 8826 6093', uid: '8826 6093', time: '09-12 21:41', paidTime: '09-12 21:48', releaseTime: '09-12 21:52', doneTime: '09-12 21:52', payMethod: 'balance', fromOrder: 'G2002' },
+          { id: 'OTC20260911003', role: 'buyer', price: 0.95, qty: 150, amount: 142.5, status: 'done', party: 'UID 8826 2210', uid: '8826 2210', time: '09-11 15:08', paidTime: '09-11 15:20', releaseTime: '09-11 15:26', doneTime: '09-11 15:26', payMethod: 'bank', fromOrder: 'G2003' }
+        ],
+        records: [
+          { side: 'sell', qty: 40, price: 1.05, fee: 4.20, time: '09-12 21:52', party: 'UID 8826 6093' },
+          { side: 'buy', qty: 150, price: 0.95, fee: 0, time: '09-12 19:52', party: 'UID 8826 6093' },
+          { side: 'sell', qty: 60, price: 1.02, fee: 6.12, time: '09-12 11:15', party: 'UID 8826 3388' },
+          { side: 'sell', qty: 200, price: 1.00, fee: 20.00, time: '09-11 16:40', party: 'UID 8826 2210' }
+        ]
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && s.market && s.deals) return s;
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      saveState(s);
+      return s;
+    }
+
+    function saveState(s) {
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+    }
+
+    const ST = loadState();
+
+    const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* ================= 取订单 ================= */
+    const QS = new URLSearchParams(location.search);
+    const DEAL_ID = QS.get('id');
+
+    /* ================= 静态演示数据（页面自包含，直接打开即可演示，刷新可重置） ================= */
+    const STATIC_DEALS = seedState().deals;
+
+    function getDeal() {
+      /* 静态演示数据优先；再查流程产生的动态记录；兜底静态第一笔 */
+      return STATIC_DEALS.find(d => d.id === DEAL_ID)
+        || (ST.deals || []).find(d => d.id === DEAL_ID)
+        || STATIC_DEALS[0];
+    }
+
+    function persist() {
+      /* 静态演示数据仅改内存（刷新重置）；流程产生的动态记录才写入 localStorage */
+      if (STATIC_DEALS.includes(getDeal())) return;
+      saveState(ST);
+    }
+
+    /* 订单信息展开态（重绘后保持） */
+    let detailOpen = false;
+
+    /* ================= 状态推导 ================= */
+    /* 已走完的步骤数（0-4）：正常态按 status 定位，取消 / 异常数据按已发生的动作兜底 */
+    function reachedStep(d) {
+      if (d.status === 'done') return 4;
+      if (d.status === 'wait_release') return 2;
+      if (d.status === 'wait_pay') return 1;
+      if (d.releaseTime) return 3;
+      if (d.paidTime) return 2;
+      return 1;
+    }
+
+    function render() {
+      const d = getDeal();
+      const box = document.getElementById('content');
+
+      if (!d) {
+        box.innerHTML = `
+          <div class="empty">
+            未找到该笔交易订单<br>
+            <a href="OTC寄售.html" style="color:var(--brand);font-weight:700;">返回交易大厅</a>
+          </div>`;
+        return;
+      }
+
+      const isSeller = d.role === 'seller';
+      const amount = d.price * d.qty;
+      const fee = isSeller ? amount * 0.1 : 0;
+      const reached = reachedStep(d);
+      const isCancel = d.status === 'cancel';
+
+      /* 进度文案：进行中带步数，终态只看结果 */
+      const progressText = d.status === 'done' ? '已完成'
+        : isCancel ? '已取消'
+        : `第 ${reached + 1}/4 步 · ` + (d.status === 'wait_release'
+          ? (isSeller ? '待您放行' : '待卖方放行')
+          : (isSeller ? '待买方支付' : '待您支付'));
+
+      /* 状态主卡 */
+      let heroCls, heroTitle, heroSub, heroIcon, heroVal, heroUnit, heroLabel;
+
+      if (d.status === 'wait_pay') {
+        if (isSeller) {
+          heroCls = 'is-wait';
+          heroIcon = 'i-clock-wait';
+          heroTitle = '等待买方支付';
+          heroSub = '买方正在付款，支付完成后请及时输入支付密码放行 GP';
+          heroVal = amount; heroUnit = 'CNY'; heroLabel = '本单成交金额';
+        } else {
+          heroCls = 'is-pay';
+          heroIcon = 'i-card';
+          heroTitle = '待我支付';
+          heroSub = '请向卖方支付法币，支付后卖方将放行 GP 至您的账户';
+          heroVal = amount; heroUnit = 'CNY'; heroLabel = '应付金额';
+        }
+      } else if (d.status === 'wait_release') {
+        if (isSeller) {
+          heroCls = '';
+          heroIcon = 'i-lock';
+          heroTitle = '待我放行 GP';
+          heroSub = '';
+          heroVal = amount - fee; heroUnit = 'CNY'; heroLabel = '预计到账（已扣 10% 手续费）';
+        } else {
+          heroCls = 'is-wait';
+          heroIcon = 'i-clock-wait';
+          heroTitle = '等待卖方放行';
+          heroSub = '您已支付，卖方放行后 GP 将实时划转至您的账户';
+          heroVal = d.qty; heroUnit = 'GP'; heroLabel = '预计到账';
+        }
+      } else if (d.status === 'done') {
+        heroCls = 'is-done';
+        heroIcon = 'i-check';
+        heroTitle = '交易已完成';
+        heroSub = '平台已完成撮合结算，资产已划转';
+        heroVal = isSeller ? (amount - fee) : d.qty;
+        heroUnit = isSeller ? 'CNY' : 'GP';
+        heroLabel = isSeller ? '实际到账（已扣 10% 手续费）' : '实际到账';
+      } else {
+        heroCls = 'is-wait';
+        heroIcon = 'i-x';
+        heroTitle = '交易已取消';
+        heroSub = '该笔交易已关闭，冻结资产已退回';
+        heroVal = d.qty; heroUnit = 'GP'; heroLabel = '订单数量';
+      }
+
+      /* 流程节点：挂单/吃单 → 买方支付 → 卖方放行 → 平台结算 */
+      const stepState = i =>
+        i < reached ? 'done' : (isCancel ? 'cancel' : (i === reached ? 'now' : 'todo'));
+      const states = [0, 1, 2, 3].map(stepState);
+
+      /* by / byMe：这一步归谁做（我 / 对手方 / 平台），done 时兼作执行人 */
+      const flowSteps = [
+        {
+          label: isSeller ? '发布挂单' : '吃单成交',
+          val: `${d.qty} GP × $${fmt(d.price)}`,
+          by: '我', byMe: true, time: d.time
+        },
+        {
+          label: '买方支付法币',
+          val: `$${fmt(amount)}`,
+          by: isSeller ? '买方' : '我', byMe: !isSeller, time: d.paidTime
+        },
+        {
+          label: '卖方放行 GP',
+          val: `${d.qty} GP`,
+          by: isSeller ? '我' : '卖方', byMe: isSeller, time: d.releaseTime
+        },
+        {
+          label: isCancel ? '交易已取消' : '平台结算完成',
+          val: isSeller ? `到账 $${fmt(amount - fee)}` : `到账 ${d.qty} GP`,
+          by: '平台', byMe: false, time: d.doneTime
+        }
+      ];
+
+      const tlHTML = flowSteps.map((s, i) => {
+        const st = states[i];
+        const done = st === 'done';
+
+        /* 副行：已完成 → 谁做的 · 几点；已取消 → 终止说明；尚未发生 → 不占行 */
+        const sub = done
+          ? `<b class="${s.byMe ? 'me' : ''}">${s.by}</b>${s.time ? ' · ' + s.time : ''}`
+          : (st === 'cancel' ? '流程终止，资产已退回' : '');
+
+        const dot = done
+          ? '<svg class="icon i11"><use href="#i-check" /></svg>'
+          : (st === 'cancel' ? '<svg class="icon i11"><use href="#i-x" /></svg>' : '');
+
+        /* 胶囊：未完成步骤标注归属 —— 当前环节写「待我 / 待对手方」，未开始只写归属 */
+        const tagText = st === 'now' ? (s.byMe ? '待我' : '待' + s.by) : s.by;
+        const tag = (done || st === 'cancel') ? ''
+          : `<span class="flow-tag${s.byMe ? ' me' : ''}">${tagText}</span>`;
+
+        const valText = st === 'cancel' ? '已关闭' : s.val;
+
+        return `
+        <div class="flow-item is-${st}">
+          <div class="flow-rail">
+            <span class="flow-dot">${dot}</span>
+            <span class="flow-line"></span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-top">
+              <span class="flow-name">${s.label}</span>
+              ${tag}
+              <span class="flow-val${done ? '' : ' pending'}">${valText}</span>
+            </div>
+            ${sub ? `<div class="flow-time">${sub}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+
+      /* 订单信息（分组呈现） */
+      const infoHTML = `
+        <div class="info-sep-title">交易对方</div>
+        <div class="info-row"><span>对手方</span><span class="v">${d.party}</span></div>
+        <div class="info-row"><span>GP 资产账户</span><span class="v">${d.uid}</span></div>
+
+        <button class="detail-toggle${detailOpen ? ' open' : ''}" id="detailToggle" onclick="toggleDetail()">
+          订单与金额明细
+          <svg class="icon i14"><use href="#i-chev-d" /></svg>
+        </button>
+
+        <div class="detail-panel${detailOpen ? ' show' : ''}" id="detailPanel">
+          <div class="info-sep-title">订单信息</div>
+          <div class="info-row">
+            <span>订单号</span>
+            <span class="v">${d.id}<button class="copy-btn" onclick="copyOrderId('${d.id}')">复制</button></span>
+          </div>
+          <div class="info-row"><span>交易方向</span><span class="v ${isSeller ? 'rose' : 'brand'}">${isSeller ? '卖出 GP（收法币）' : '买入 GP（付法币）'}</span></div>
+          <div class="info-row"><span>我的角色</span><span class="v">${isSeller ? '卖方（挂单方）' : '买方（吃单方）'}</span></div>
+          <div class="info-row"><span>下单时间</span><span class="v">2026-${d.time}</span></div>
+
+          <div class="info-sep-title">金额明细</div>
+          <div class="info-row"><span>成交单价</span><span class="v">$${fmt(d.price)} / GP</span></div>
+          <div class="info-row"><span>成交数量</span><span class="v">${d.qty} GP</span></div>
+          <div class="info-row"><span>订单金额</span><span class="v">$${fmt(amount)}</span></div>
+          <div class="info-row"><span>平台手续费</span><span class="v ${fee > 0 ? 'rose' : ''}">${fee > 0 ? '- $' + fmt(fee) + '（10%）' : '0.00（买方免收）'}</span></div>
+          <div class="info-row"><span>${isSeller ? '实际到账' : '应付金额'}</span><span class="v amber">$${fmt(isSeller ? amount - fee : amount)}</span></div>
+        </div>`;
+
+      /* 底部操作栏 */
+      let actionHTML = '';
+      if (d.status === 'wait_pay') {
+        actionHTML = isSeller
+          ? `<button class="btn ghost" onclick="simulateParty()">
+               <svg class="icon i14"><use href="#i-flask"/></svg>
+               模拟买方已支付（演示）
+             </button>`
+          : `<button class="btn primary" onclick="openPayModal()">
+               <svg class="icon i16"><use href="#i-card"/></svg>
+               确认支付 $${fmt(amount)}
+             </button>`;
+      } else if (d.status === 'wait_release') {
+        actionHTML = isSeller
+          ? `<button class="btn warn" onclick="openPwdModal()">
+               <svg class="icon i16"><use href="#i-lock"/></svg>
+               放行
+             </button>`
+          : `<button class="btn ghost" onclick="simulateParty()">
+               <svg class="icon i14"><use href="#i-flask"/></svg>
+               模拟卖方已放行（演示）
+             </button>`;
+      } else {
+        actionHTML = `<a class="btn done-btn" href="OTC寄售.html">
+             <svg class="icon i16"><use href="#i-store"/></svg>
+             返回交易大厅
+           </a>`;
+      }
+
+      /* 安全提示（C2C 场景） */
+      let warnBarHTML = '';
+      if (d.status === 'wait_release' && !isSeller) {
+        warnBarHTML = `<div class="warn-bar">
+            <svg class="icon i14"><use href="#i-shield"/></svg>
+            <div>
+              <b>已支付，等待卖方放行</b>
+              <span>${d.qty} GP 放行后到账，请勿重复付款。</span>
+            </div>
+          </div>`;
+      } else if (d.status === 'wait_pay' && !isSeller) {
+        warnBarHTML = `<div class="warn-bar">
+            <svg class="icon i14"><use href="#i-shield"/></svg>
+            <div>
+              <b>付款前核对收款方</b>
+              <span>UID ${d.uid}· 付款后回本页确认支付。</span>
+            </div>
+          </div>`;
+      }
+
+      /* 渲染 */
+      box.innerHTML = `
+        <section class="status-hero ${heroCls}">
+          <div class="sh-amount">
+            <b>${heroUnit === 'CNY' ? '$' + fmt(heroVal) : fmt(heroVal)}</b>
+          </div>
+          <div class="sh-label">${heroUnit === 'GP' ? 'GP · ' : ''}${heroLabel}</div>
+          <div class="sh-title">${heroTitle}</div>
+          ${heroSub ? `<div class="sh-sub">${heroSub}</div>` : ''}
+        </section>
+
+        ${warnBarHTML}
+
+        <div class="block-label">
+          <div class="lb-left">
+            <svg class="icon i14"><use href="#i-clock"/></svg>
+            交易进度
+          </div>
+          <div class="lb-right">${progressText}</div>
+        </div>
+        <section class="card">${tlHTML}</section>
+
+        <div class="block-label">
+          <div class="lb-left">
+            <svg class="icon i14"><use href="#i-list"/></svg>
+            订单信息
+          </div>
+          <div class="lb-right">${d.status === 'done' ? '已结算' : '撮合中'}</div>
+        </div>
+        <section class="card">${infoHTML}</section>
+
+        <div class="action-bar" style="position:fixed;">${actionHTML}</div>
+      `;
+
+      /* 同步弹窗内容 */
+      document.getElementById('payOrderId').textContent = d.id;
+      document.getElementById('paySeller').textContent = 'UID ' + d.uid;
+      document.getElementById('payQty').textContent = d.qty + ' GP';
+      document.getElementById('payAmount').textContent = '$' + fmt(amount);
+      document.getElementById('payBtnText').textContent = '确认支付 $' + fmt(amount);
+      document.getElementById('pwdQty').textContent = fmt(d.qty) + ' GP';
+      document.getElementById('pwdSub').innerHTML =
+        `放行 <span class="rose">${fmt(d.qty)} GP</span> · 到账 <span class="brand">$${fmt(amount - fee)}</span>（已扣 10% 手续费）`;
+    }
+
+    function openPayModal() {
+      document.getElementById('payModal').classList.add('show');
+    }
+
+    function confirmPay() {
+      const d = getDeal();
+      if (!d || d.status !== 'wait_pay') return;
+
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      d.status = 'wait_release';
+      d.paidTime = `${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      persist();
+      closeModal('payModal');
+      render();
+      showToast('支付成功，已通知卖方放行 GP');
+    }
+
+    /* ================= 卖方：输入支付密码放行 ================= */
+    function openPwdModal() {
+      document.querySelectorAll('.pwd-cell').forEach(c => { c.value = ''; c.classList.remove('filled'); });
+      document.getElementById('pwdModal').classList.add('show');
+      setTimeout(() => document.querySelectorAll('.pwd-cell')[0].focus(), 320);
+    }
+
+    function onPwd(el, idx) {
+      el.classList.toggle('filled', !!el.value);
+      const cells = document.querySelectorAll('.pwd-cell');
+      if (el.value && idx < cells.length - 1) cells[idx + 1].focus();
+      if (!el.value && idx > 0) cells[idx - 1].focus();
+    }
+
+    function confirmRelease() {
+      const d = getDeal();
+      if (!d || d.status !== 'wait_release') return;
+
+      const code = [...document.querySelectorAll('.pwd-cell')].map(c => c.value).join('');
+      if (code.length < 6) return showToast('请输入 6 位支付密码');
+
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      const timeStr = `${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      const amount = d.price * d.qty;
+      const fee = amount * 0.1;
+
+      const isStatic = STATIC_DEALS.includes(d);
+
+      if (!isStatic) {
+        /* 动态记录：解冻并划出 GP，记录到账（静态演示数据仅内存态） */
+        ST.frozenGp = Math.round(Math.max(0, ST.frozenGp - d.qty) * 100) / 100;
+        ST.records.unshift({
+          side: 'sell',
+          qty: d.qty,
+          price: d.price,
+          fee: fee,
+          time: timeStr,
+          party: 'UID ' + d.uid
+        });
+      }
+
+      d.status = 'done';
+      d.releaseTime = timeStr;
+      d.doneTime = timeStr;
+
+      if (!isStatic) saveState(ST);
+      closeModal('pwdModal');
+      render();
+      showToast('已放行 ' + d.qty + ' GP，本单交易完成');
+    }
+
+    /* ================= 演示：模拟对手方操作 ================= */
+    function simulateParty() {
+      const d = getDeal();
+      if (!d) return;
+
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      const timeStr = `${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+      if (d.status === 'wait_pay' && d.role === 'seller') {
+        /* 模拟买方付款 */
+        d.status = 'wait_release';
+        d.paidTime = timeStr;
+        persist();
+        render();
+        return showToast('演示：买方已支付 $' + fmt(d.price * d.qty) + '，请放行 GP');
+      }
+
+      if (d.status === 'wait_release' && d.role === 'buyer') {
+        /* 模拟卖方放行，买方收到 GP */
+        const amount = d.price * d.qty;
+        ST.gpBalance = Math.round((ST.gpBalance + d.qty) * 100) / 100;
+        ST.records.unshift({
+          side: 'buy',
+          qty: d.qty,
+          price: d.price,
+          fee: 0,
+          time: timeStr,
+          party: 'UID ' + d.uid
+        });
+
+        d.status = 'done';
+        d.releaseTime = timeStr;
+        d.doneTime = timeStr;
+        d.receivedGp = d.qty;
+
+        persist();
+        render();
+        return showToast('演示：卖方已放行，' + d.qty + ' GP 已到账');
+      }
+    }
+
+    /* ================= 弹窗控制 ================= */
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    function maskClose(e) {
+      if (e.target.id === 'payModal' || e.target.id === 'pwdModal') {
+        e.target.classList.remove('show');
+      }
+    }
+
+    /* ================= 复制订单号 ================= */
+    function copyOrderId(id) {
+      const done = () => showToast('订单号已复制');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(id).then(done).catch(() => fallbackCopy(id, done));
+      } else {
+        fallbackCopy(id, done);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); cb(); } catch (e) { showToast('复制失败，请长按订单号复制'); }
+      document.body.removeChild(ta);
+    }
+
+    /* ================= 详情展开 ================= */
+    function toggleDetail() {
+      detailOpen = !detailOpen;
+      const panel = document.getElementById('detailPanel');
+      const toggle = document.getElementById('detailToggle');
+      if (panel) panel.classList.toggle('show', detailOpen);
+      if (toggle) toggle.classList.toggle('open', detailOpen);
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    /* ================= 初始化 ================= */
+    render();
+  </script>
+</body>
+
+</html>

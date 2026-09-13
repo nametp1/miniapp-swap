@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · 我的挂单</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --green-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --purple-border: #ddd6fe;
+      --cyan-border: #a5f3fc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 84px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+    .i22 { font-size: 22px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+      background: var(--bg);
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ================= 余额条 ================= */
+    .gp-strip {
+      display: flex;
+      gap: 10px;
+      margin: 0 16px 14px;
+      animation: rise .45s ease backwards;
+    }
+
+    .gp-cell {
+      flex: 1;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .gp-cell .k {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .gp-cell .v {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+      letter-spacing: -.4px;
+    }
+
+    .gp-cell .v.brand {
+      color: var(--brand);
+    }
+
+    .gp-cell .v.muted {
+      color: var(--muted);
+    }
+
+    /* ================= 汇总 ================= */
+    .stat-card {
+      display: flex;
+      margin: 0 16px 16px;
+      padding: 14px 6px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .04s;
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 22%;
+      bottom: 22%;
+      width: 1px;
+      background: var(--line-2);
+    }
+
+    .stat-item:last-child::after {
+      display: none;
+    }
+
+    .stat-item .k {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .stat-item .v {
+      margin-top: 5px;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+    }
+
+    .stat-item .v.amber { color: var(--amber); }
+    .stat-item .v.blue { color: var(--blue); }
+    .stat-item .v.green { color: var(--green); }
+    .stat-item .v.muted { color: var(--muted-2); }
+
+    /* ================= 通用块 ================= */
+    .block-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 0 16px 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .block-label .lb-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .block-label .lb-left .icon {
+      color: var(--brand);
+    }
+
+    .block-label .lb-right {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ================= 筛选 chips ================= */
+    .chips {
+      display: flex;
+      gap: 7px;
+      margin: 0 16px 10px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex-shrink: 0;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all .2s;
+    }
+
+    .chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    /* ================= 挂单列表 ================= */
+    .list {
+      margin: 0 16px 16px;
+      animation: rise .45s ease backwards;
+      animation-delay: .08s;
+    }
+
+    .order-item {
+      background: #fff;
+      border-radius: 15px;
+      padding: 13px 14px;
+      margin-bottom: 9px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .oi-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .oi-side {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .oi-side .tag {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .oi-side.sell {
+      color: var(--rose);
+    }
+
+    .oi-side.sell .tag {
+      background: var(--rose);
+    }
+
+    .oi-side.buy {
+      color: var(--brand);
+    }
+
+    .oi-side.buy .tag {
+      background: var(--brand);
+    }
+
+    .oi-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .s-pending {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .s-part {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .s-done {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .s-cancel {
+      background: var(--line-2);
+      color: var(--muted);
+    }
+
+    .oi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px dashed var(--line-2);
+      border-bottom: 1px dashed var(--line-2);
+    }
+
+    .oi-cell .k {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .oi-cell .v {
+      margin-top: 3px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+    }
+
+    .oi-cell .v.amber {
+      color: var(--amber);
+    }
+
+    .oi-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted-2);
+      gap: 10px;
+    }
+
+    .oi-foot .order-id {
+      font-feature-settings: "tnum";
+    }
+
+    .oi-actions {
+      display: flex;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .deal-hint {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 11.5px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .deal-hint .icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .deal-hint.warn {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .mini-btn {
+      padding: 6px 13px;
+      border-radius: 9px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: var(--line-2);
+      color: var(--ink-3);
+    }
+
+    .mini-btn.danger {
+      background: var(--rose-soft);
+      color: var(--rose);
+    }
+
+    .mini-btn.brand {
+      background: var(--brand-soft);
+      color: var(--brand-3);
+    }
+
+    .empty {
+      padding: 40px 16px;
+      text-align: center;
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: var(--muted-2);
+      background: #fff;
+      border-radius: 15px;
+      border: 1px dashed var(--line);
+    }
+
+    /* ================= 发布入口 ================= */
+    .publish-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: calc(100% - 32px);
+      margin: 0 16px 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 10px 22px -12px rgba(0, 184, 108, .9);
+    }
+
+    .publish-btn:active {
+      transform: scale(.985);
+    }
+
+    /* ================= 底部导航 ================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 414px;
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      padding: 6px 0 calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 0;
+      font-size: 11px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .nav-item.active {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .nav-item .icon {
+      font-size: 22px;
+      stroke-width: 1.9;
+      padding: 3px;
+      border-radius: 50%;
+      color: var(--muted);
+      transition: background .22s, color .2s, transform .22s;
+    }
+
+    .nav-item.active .icon {
+      color: var(--brand);
+      background: rgba(0, 184, 108, .12);
+      transform: translateY(-2px);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* ================= 挂单卡（与 OTC寄售「进行中的交易」统一） ================= */
+    .deal-item {
+      position: relative;
+      background: #fff;
+      border-radius: 15px;
+      padding: 14px;
+      margin-bottom: 9px;
+      box-shadow: var(--shadow-xs);
+      overflow: hidden;
+      transition: transform .15s;
+    }
+
+    .deal-item:active {
+      transform: scale(.99);
+    }
+
+    .deal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .deal-side {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .deal-side .tag {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .deal-side.sell {
+      color: var(--rose);
+    }
+
+    .deal-side.sell .tag {
+      background: var(--rose);
+    }
+
+    .deal-side.buy {
+      color: var(--brand);
+    }
+
+    .deal-side.buy .tag {
+      background: var(--brand);
+    }
+
+    .deal-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px dashed var(--line-2);
+      border-bottom: 1px dashed var(--line-2);
+    }
+
+    .deal-meta .k {
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .deal-meta .v {
+      margin-top: 3px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+    }
+
+    .deal-meta .v.amber {
+      color: var(--amber);
+    }
+
+    .deal-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 11px;
+      font-size: 10.5px;
+      color: var(--muted-2);
+      gap: 10px;
+    }
+
+    .deal-foot .left {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-feature-settings: "tnum";
+    }
+
+    /* ================= 成交子单（挂单下的撮合记录，每笔独立支付 / 放行） ================= */
+    .detail-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px 0;
+      border-radius: 11px;
+      background: var(--line-2);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-3);
+    }
+
+    .detail-toggle .icon {
+      transition: transform .25s;
+      color: var(--muted);
+    }
+
+    .detail-toggle.open .icon {
+      transform: rotate(180deg);
+    }
+
+    .detail-toggle .hl {
+      color: var(--amber);
+    }
+
+    .detail-panel {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .detail-panel.show {
+      display: block;
+      animation: rise .3s ease backwards;
+    }
+
+    .sub-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 11px;
+      margin-top: 7px;
+      border-radius: 11px;
+      background: var(--line-2);
+      border: 1px solid transparent;
+    }
+
+    .sub-row.todo {
+      background: var(--amber-soft);
+      border-color: var(--amber-border);
+    }
+
+    .sub-main {
+      min-width: 0;
+    }
+
+    .sub-top {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+      font-feature-settings: "tnum";
+    }
+
+    .sub-top .u {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .sub-sub {
+      margin-top: 3px;
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    .sub-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .sub-right .icon {
+      color: var(--muted-2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3 12L12 3l9 9" />
+        <path d="M5 10v10h14V10" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-cart" viewBox="0 0 24 24">
+        <path d="M3 3h2l2.4 12.3a2 2 0 0 0 2 1.7h8.2a2 2 0 0 0 2-1.6L21 8H6" />
+        <circle cx="9" cy="20" r="1.4" />
+        <circle cx="18" cy="20" r="1.4" />
+      </symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24">
+        <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z" />
+        <circle cx="12" cy="9" r="2.5" />
+      </symbol>
+      <symbol id="i-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21v-1c0-3.3 3.6-6 8-6s8 2.7 8 6v1" />
+      </symbol>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-chev-r" viewBox="0 0 24 24">
+        <polyline points="9 6 15 12 9 18" />
+      </symbol>
+      <symbol id="i-chev-d" viewBox="0 0 24 24">
+        <polyline points="6 9 12 15 18 9" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <line x1="9" y1="13" x2="15" y2="13" />
+        <line x1="9" y1="17" x2="15" y2="17" />
+      </symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24">
+        <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
+        <path d="M16 12h.01" />
+        <path d="M3 7h13a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5" />
+      </symbol>
+      <symbol id="i-info" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </symbol>
+      <symbol id="i-swap-v" viewBox="0 0 24 24">
+        <polyline points="8 4 12 8 16 4" />
+        <line x1="12" y1="8" x2="12" y2="16" />
+        <polyline points="16 20 12 16 8 20" />
+      </symbol>
+      <symbol id="i-arrows-lr" viewBox="0 0 24 24">
+        <polyline points="7 8 3 12 7 16" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <polyline points="17 8 21 12 17 16" />
+      </symbol>
+      <symbol id="i-store" viewBox="0 0 24 24">
+        <path d="M3 9l1.5-5h15L21 9" />
+        <path d="M4 9v11h16V9" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol id="i-arrows-ud" viewBox="0 0 24 24">
+        <polyline points="8 8 12 4 16 8" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+        <polyline points="8 16 12 20 16 16" />
+      </symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24">
+        <polyline points="20 12 20 22 4 22 4 12" />
+        <rect x="2" y="7" width="20" height="5" />
+        <line x1="12" y1="22" x2="12" y2="7" />
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="OTC寄售.html" title="返回交易大厅">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">我的挂单</div>
+    <a class="icon-btn" href="OTC寄售.html#publish" title="发布挂单">
+      <svg class="icon i16"><use href="#i-plus" /></svg>
+    </a>
+  </header>
+
+  <!-- ================= 余额 ================= -->
+  <section class="gp-strip">
+    <div class="gp-cell">
+      <div class="k">可用 GP</div>
+      <div class="v brand" id="gpBalance">128.00</div>
+    </div>
+    <div class="gp-cell">
+      <div class="k">冻结 GP</div>
+      <div class="v muted" id="frozenGp">100.00</div>
+    </div>
+  </section>
+
+  <!-- ================= 汇总 ================= -->
+  <section class="stat-card">
+    <div class="stat-item">
+      <div class="k">挂单中</div>
+      <div class="v amber" id="stPending">0</div>
+    </div>
+    <div class="stat-item">
+      <div class="k">部分成交</div>
+      <div class="v blue" id="stPart">0</div>
+    </div>
+    <div class="stat-item">
+      <div class="k">已成交</div>
+      <div class="v green" id="stDone">0</div>
+    </div>
+    <div class="stat-item">
+      <div class="k">已撤单</div>
+      <div class="v muted" id="stCancel">0</div>
+    </div>
+  </section>
+
+  <!-- ================= 列表 ================= -->
+  <div class="block-label">
+    <div class="lb-left">
+      <svg class="icon i14"><use href="#i-list" /></svg>
+      挂单记录
+    </div>
+    <div class="lb-right" id="myCount"></div>
+  </div>
+  <div class="chips" id="statusChips">
+    <div class="chip active" data-status="ALL">全部</div>
+    <div class="chip" data-status="pending">挂单中</div>
+    <div class="chip" data-status="part">部分成交</div>
+    <div class="chip" data-status="done">已成交</div>
+    <div class="chip" data-status="cancel">已撤单</div>
+  </div>
+  <div class="list" id="orderList"></div>
+
+  <a class="publish-btn" href="OTC寄售.html#publish">
+    <svg class="icon i16"><use href="#i-plus" /></svg>
+    去发布新的挂单
+  </a>
+
+  <!-- ================= 底部导航 ================= -->
+  <nav class="bottom-nav">
+    <a class="nav-item" href="../资产页面.html">
+      <svg class="icon"><use href="#i-wallet" /></svg>
+      <span>资产</span>
+    </a>
+    <a class="nav-item active" href="OTC寄售.html">
+      <svg class="icon"><use href="#i-user" /></svg>
+      <span>OTC</span>
+    </a>
+    <a class="nav-item" href="../../商城/首页-商城.html">
+      <svg class="icon"><use href="#i-store" /></svg>
+      <span>商城</span>
+    </a>
+    <a class="nav-item" href="../兑换/资产兑换.html">
+      <svg class="icon"><use href="#i-arrows-ud" /></svg>
+      <span>兑换</span>
+    </a>
+    <a class="nav-item" href="../转让/站内转让.html">
+      <svg class="icon"><use href="#i-gift" /></svg>
+      <span>转让</span>
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       共享状态（与 OTC寄售 / OTC-交易详情 共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v3';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [
+          { id: 'M1001', side: 'sell', price: 1.00, qty: 500, party: 'UID 8826 4471', uid: '8826 4471', credit: '优秀', time: '2 分钟前' },
+          { id: 'M1002', side: 'sell', price: 1.02, qty: 300, party: 'UID 8826 6093', uid: '8826 6093', credit: '良好', time: '6 分钟前' },
+          { id: 'M1003', side: 'buy', price: 0.98, qty: 200, party: 'UID 8826 3388', uid: '8826 3388', credit: '优秀', time: '9 分钟前' },
+          { id: 'M1004', side: 'buy', price: 0.96, qty: 800, party: 'UID 8826 2210', uid: '8826 2210', credit: '良好', time: '14 分钟前' }
+        ],
+        myOrders: [
+          { id: 'G2005', side: 'sell', price: 1.10, qty: 60, filled: 0, status: 'pending', time: '09-13 11:20' },
+          { id: 'G2001', side: 'sell', price: 1.00, qty: 100, filled: 0, status: 'pending', time: '09-13 10:12' },
+          { id: 'G2002', side: 'sell', price: 1.05, qty: 200, filled: 120, status: 'part', time: '09-12 21:40' },
+          { id: 'G2003', side: 'buy', price: 0.95, qty: 150, filled: 150, status: 'done', time: '09-11 15:08' },
+          { id: 'G2004', side: 'sell', price: 1.20, qty: 80, filled: 0, status: 'cancel', time: '09-10 09:33' }
+        ],
+        /* 成交子单：fromOrder 指回产生它的挂单；无 fromOrder = 我在大厅吃下别人的挂单 */
+        deals: [
+          { id: 'OTC20260913005', role: 'buyer', price: 1.02, qty: 150, amount: 153, status: 'wait_pay', party: 'UID 8826 6093', uid: '8826 6093', time: '09-13 11:05' },
+          { id: 'OTC20260913001', role: 'seller', price: 1.00, qty: 100, amount: 100, status: 'wait_pay', party: 'UID 8826 3388', uid: '8826 3388', time: '09-13 10:14', fromOrder: 'G2001' },
+          { id: 'OTC20260912002', role: 'seller', price: 1.05, qty: 80, amount: 84, status: 'wait_release', party: 'UID 8826 4471', uid: '8826 4471', time: '09-12 21:42', paidTime: '09-12 21:58', payMethod: 'bank', fromOrder: 'G2002' },
+          { id: 'OTC20260912001', role: 'seller', price: 1.05, qty: 40, amount: 42, status: 'done', party: 'UID 8826 6093', uid: '8826 6093', time: '09-12 21:41', paidTime: '09-12 21:48', releaseTime: '09-12 21:52', doneTime: '09-12 21:52', payMethod: 'balance', fromOrder: 'G2002' },
+          { id: 'OTC20260911003', role: 'buyer', price: 0.95, qty: 150, amount: 142.5, status: 'done', party: 'UID 8826 2210', uid: '8826 2210', time: '09-11 15:08', paidTime: '09-11 15:20', releaseTime: '09-11 15:26', doneTime: '09-11 15:26', payMethod: 'bank', fromOrder: 'G2003' }
+        ],
+        records: [
+          { side: 'sell', qty: 40, price: 1.05, fee: 4.20, time: '09-12 21:52', party: 'UID 8826 6093' },
+          { side: 'buy', qty: 150, price: 0.95, fee: 0, time: '09-12 19:52', party: 'UID 8826 6093' },
+          { side: 'sell', qty: 60, price: 1.02, fee: 6.12, time: '09-12 11:15', party: 'UID 8826 3388' },
+          { side: 'sell', qty: 200, price: 1.00, fee: 20.00, time: '09-11 16:40', party: 'UID 8826 2210' }
+        ]
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && s.market && s.deals) return s;
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      saveState(s);
+      return s;
+    }
+
+    function saveState(s) {
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+    }
+
+    const ST = loadState();
+
+    const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const ORDER_STATUS = {
+      pending: { text: '挂单中', cls: 's-pending' },
+      part: { text: '部分成交', cls: 's-part' },
+      done: { text: '已成交', cls: 's-done' },
+      cancel: { text: '已撤单', cls: 's-cancel' }
+    };
+
+    let currentStatus = 'ALL';
+
+    /* ================= 余额 ================= */
+    function renderBalance() {
+      document.getElementById('gpBalance').textContent = fmt(ST.gpBalance);
+      document.getElementById('frozenGp').textContent = fmt(ST.frozenGp);
+    }
+
+    /* ================= 汇总 ================= */
+    function renderStat() {
+      const stat = { pending: 0, part: 0, done: 0, cancel: 0 };
+      ST.myOrders.forEach(o => { stat[o.status] = (stat[o.status] || 0) + 1; });
+
+      document.getElementById('stPending').textContent = stat.pending;
+      document.getElementById('stPart').textContent = stat.part;
+      document.getElementById('stDone').textContent = stat.done;
+      document.getElementById('stCancel').textContent = stat.cancel;
+
+      /* 有成交子单待我处理时（待支付 / 待放行），在右上角优先提示 */
+      const todo = ST.deals.filter(isTodoDeal).length;
+      const busy = stat.pending + stat.part;
+
+      document.getElementById('myCount').innerHTML =
+        `共 ${ST.myOrders.length} 笔` +
+        (busy ? ` · ${busy} 笔进行中` : '') +
+        (todo ? ` · <span style="color:var(--amber)">${todo} 笔待我处理</span>` : '');
+    }
+
+    /* ================= 成交子单口径（与 OTC寄售 / OTC-交易详情 一致） ================= */
+    function isActiveDeal(d) { return d.status === 'wait_pay' || d.status === 'wait_release'; }
+
+    /* 待我处理：我买入待支付 / 我卖出待放行 */
+    function isTodoDeal(d) {
+      return (d.status === 'wait_pay' && d.role === 'buyer')
+        || (d.status === 'wait_release' && d.role === 'seller');
+    }
+
+    function dealBadge(d) {
+      if (d.status === 'wait_pay') {
+        return d.role === 'buyer'
+          ? { text: '待我支付', cls: 's-pending', mine: true }
+          : { text: '待买方支付', cls: 's-part', mine: false };
+      }
+      if (d.status === 'wait_release') {
+        return d.role === 'seller'
+          ? { text: '待我放行', cls: 's-pending', mine: true }
+          : { text: '待卖方放行', cls: 's-part', mine: false };
+      }
+      if (d.status === 'done') return { text: '已完成', cls: 's-done', mine: false };
+      return { text: '已取消', cls: 's-cancel', mine: false };
+    }
+
+    /* 挂单下的成交子单：一笔挂单被分次吃单 → 多笔子单，各自独立支付 / 放行 */
+    const subsOf = oid => ST.deals.filter(d => d.fromOrder === oid);
+
+    /* 折叠态：用户手动切换过就按用户的，否则「有待我处理」的挂单默认展开 */
+    const subOpen = {};
+    function isSubOpen(o, subs) {
+      if (o.id in subOpen) return subOpen[o.id];
+      return subs.some(isTodoDeal);
+    }
+    function toggleSubs(oid) {
+      const o = ST.myOrders.find(x => x.id === oid);
+      if (o) subOpen[oid] = !isSubOpen(o, subsOf(oid));
+      renderOrders();
+    }
+
+    /* ================= 列表 ================= */
+    function renderOrders() {
+      const box = document.getElementById('orderList');
+      const arr = ST.myOrders.filter(o => currentStatus === 'ALL' || o.status === currentStatus);
+
+      if (!arr.length) {
+        box.innerHTML = '<div class="empty">该状态下暂无挂单记录<br><a href="OTC寄售.html#publish" style="color:var(--brand);font-weight:700;">去发布挂单</a></div>';
+        return;
+      }
+
+      box.innerHTML = arr.map(o => {
+        const st = ORDER_STATUS[o.status];
+        const isSell = o.side === 'sell';
+        const amount = o.price * o.qty;
+        const fee = isSell ? amount * 0.1 : 0;
+        const remain = o.qty - o.filled;
+
+        /* 成交子单（可能多笔）与其中待我处理的部分 */
+        const subs = subsOf(o.id);
+        const active = subs.filter(isActiveDeal);
+        const todo = subs.filter(isTodoDeal);
+
+        /* 卡头徽章：待我处理 > 等对方处理 > 挂单自身状态 */
+        let badgeText = st.text;
+        let badgeCls = st.cls;
+        if (todo.length) {
+          badgeText = (todo[0].status === 'wait_release' ? '待我放行' : '待我支付')
+            + (todo.length > 1 ? ` ${todo.length} 笔` : '');
+          badgeCls = 's-pending';
+        } else if (active.length) {
+          badgeText = active[0].status === 'wait_pay' ? '待买方支付' : '待卖方放行';
+          badgeCls = 's-part';
+        }
+
+        /* 有子单在途时不可撤单（未成交部分仍冻结） */
+        const canCancel = (o.status === 'pending' || o.status === 'part') && !active.length;
+
+        /* 成交子单：一行一单，点进交易详情做支付 / 放行 */
+        const subHTML = subs.length ? `
+          <button class="detail-toggle${isSubOpen(o, subs) ? ' open' : ''}" onclick="event.stopPropagation();toggleSubs('${o.id}')">
+            成交记录 ${subs.length} 笔${todo.length ? `<span class="hl">· ${todo.length} 笔待我处理</span>` : ''}
+            <svg class="icon i11"><use href="#i-chev-d" /></svg>
+          </button>
+          <div class="detail-panel${isSubOpen(o, subs) ? ' show' : ''}">
+            ${subs.map(d => {
+              const b = dealBadge(d);
+              return `
+                <div class="sub-row${b.mine ? ' todo' : ''}" onclick="event.stopPropagation();goDeal('${d.id}')">
+                  <div class="sub-main">
+                    <div class="sub-top">${d.qty} GP <span class="u">× $${fmt(d.price)}</span></div>
+                    <div class="sub-sub">${d.party} · ${d.time} · ${d.id}</div>
+                  </div>
+                  <div class="sub-right">
+                    <span class="oi-status ${b.cls}">${b.text}</span>
+                    <svg class="icon i11"><use href="#i-chev-r" /></svg>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>` : '';
+
+        const footHTML = canCancel
+          ? `<span class="oi-actions">
+               <span class="mini-btn danger" onclick="event.stopPropagation();cancelOrder('${o.id}')">撤单</span>
+               <span class="mini-btn" onclick="event.stopPropagation();location.href='OTC寄售.html#publish'">再挂一单</span>
+             </span>`
+          : `<span class="mini-btn" onclick="event.stopPropagation();location.href='OTC寄售.html#publish'">再挂一单</span>`;
+
+        return `
+          <div class="deal-item">
+            <div class="deal-head">
+              <div class="deal-side ${o.side}">
+                <span class="tag">${isSell ? '卖' : '买'}</span>
+                ${isSell ? '卖出 GP' : '买入 GP'}
+              </div>
+              <span class="oi-status ${badgeCls}">${badgeText}</span>
+            </div>
+            <div class="deal-meta">
+              <div>
+                <div class="k">单价</div>
+                <div class="v">$${fmt(o.price)}</div>
+              </div>
+              <div>
+                <div class="k">数量 / 已成交</div>
+                <div class="v">${o.qty} / ${o.filled}</div>
+              </div>
+              <div>
+                <div class="k">${isSell ? '手续费 10%' : '挂单总额'}</div>
+                <div class="v amber">$${fmt(isSell ? fee : amount)}</div>
+              </div>
+            </div>
+            ${subHTML}
+            <div class="deal-foot">
+              <span class="left">${remain > 0 ? `剩余 ${remain} GP` : `已成交 ${o.filled} GP`} · ${o.id} · ${o.time}</span>
+              ${footHTML}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ================= 跳转交易详情 ================= */
+    function goDeal(id) {
+      location.href = 'OTC-交易详情.html?id=' + encodeURIComponent(id);
+    }
+
+    /* ================= 撤单 ================= */
+    function cancelOrder(oid) {
+      const o = ST.myOrders.find(x => x.id === oid);
+      if (!o) return;
+
+      /* 已进入撮合的挂单不可直接撤销 */
+      const busy = ST.deals.find(d => d.fromOrder === oid && (d.status === 'wait_pay' || d.status === 'wait_release'));
+      if (busy) {
+        return showToast('该挂单已有撮合订单进行中，请先完成交易');
+      }
+
+      const remain = o.qty - o.filled;
+
+      if (o.side === 'sell') {
+        ST.gpBalance = Math.round((ST.gpBalance + remain) * 100) / 100;
+        ST.frozenGp = Math.round(Math.max(0, ST.frozenGp - remain) * 100) / 100;
+      }
+      o.status = 'cancel';
+
+      /* 同时关闭该挂单产生的待付款交易 */
+      ST.deals = ST.deals.filter(d => !(d.fromOrder === o.id && d.status === 'wait_pay'));
+
+      saveState(ST);
+      renderAll();
+      showToast(o.side === 'sell' ? `已撤单，${remain} GP 已解冻退回` : '已撤单');
+    }
+
+    /* ================= 筛选 ================= */
+    document.querySelectorAll('#statusChips .chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('#statusChips .chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        currentStatus = c.dataset.status;
+        renderOrders();
+      });
+    });
+
+    /* ================= 统一渲染 ================= */
+    function renderAll() {
+      renderBalance();
+      renderStat();
+      renderOrders();
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    /* ================= 初始化 ================= */
+    renderAll();
+  </script>
+</body>
+
+</html>
