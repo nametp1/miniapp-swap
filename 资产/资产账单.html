@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · 资产账单</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --green-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --purple-border: #ddd6fe;
+      --cyan-border: #a5f3fc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 84px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+    .i22 { font-size: 22px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+      background: var(--bg);
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ================= 筛选（美团式下拉） ================= */
+    .filter-bar {
+      position: sticky;
+      top: 50px;
+      z-index: 19;
+      display: flex;
+      align-items: stretch;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 6px 14px -10px rgba(15, 23, 42, .18);
+    }
+
+    .filter-tab {
+      position: relative;
+      z-index: 20;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-2);
+      background: none;
+      transition: color .2s;
+    }
+
+    .filter-tab + .filter-tab::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24%;
+      bottom: 24%;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .filter-tab.open,
+    .filter-tab.active-sel {
+      color: var(--brand);
+    }
+
+    .filter-tab .ft-caret {
+      color: var(--muted-2);
+      transition: transform .2s, color .2s;
+    }
+
+    .filter-tab.open .ft-caret {
+      transform: rotate(180deg);
+      color: var(--brand);
+    }
+
+    .filter-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+      z-index: 18;
+    }
+
+    .filter-mask.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .filter-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 19;
+      background: #fff;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 16px 34px -16px rgba(15, 23, 42, .4);
+      padding: 6px 0 10px;
+      max-height: 64vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+    }
+
+    .filter-panel.show {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    .filter-opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--ink-2);
+      transition: background .15s, color .15s;
+    }
+
+    .filter-opt:active {
+      background: var(--line-2);
+    }
+
+    .filter-opt.active {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .filter-opt .ft-check {
+      width: 17px;
+      height: 17px;
+      color: var(--brand);
+      opacity: 0;
+      transition: opacity .15s;
+    }
+
+    .filter-opt.active .ft-check {
+      opacity: 1;
+    }
+
+    /* ================= 摘要卡 ================= */
+    .summary-card {
+      position: relative;
+      overflow: hidden;
+      margin: 0 16px 16px;
+      padding: 18px;
+      border-radius: 20px;
+      color: #fff;
+      background: linear-gradient(135deg, #00b86c 0%, #0891b2 100%);
+      box-shadow: 0 12px 28px -16px rgba(0, 184, 108, .85);
+      animation: rise .45s ease backwards;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .13);
+    }
+
+    .summary-top {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .summary-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, .2);
+      border: 1px solid rgba(255, 255, 255, .28);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+
+    .summary-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .summary-desc {
+      margin-top: 3px;
+      font-size: 10.5px;
+      opacity: .85;
+    }
+
+    .summary-val {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 14px;
+      font-feature-settings: "tnum";
+    }
+
+    .summary-val b {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -.6px;
+    }
+
+    .summary-val span {
+      font-size: 12.5px;
+      font-weight: 600;
+      opacity: .9;
+    }
+
+    .summary-foot {
+      position: relative;
+      display: flex;
+      gap: 20px;
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(255, 255, 255, .22);
+      font-size: 11px;
+      font-feature-settings: "tnum";
+    }
+
+    .summary-foot i {
+      font-style: normal;
+      opacity: .8;
+      margin-right: 4px;
+    }
+
+    .summary-foot b {
+      font-weight: 700;
+    }
+
+    /* ================= 通用块 ================= */
+    .block-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 0 16px 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .block-label .lb-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .block-label .lb-left .icon {
+      color: var(--brand);
+    }
+
+    .block-label .lb-right {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ================= 账单列表 ================= */
+    .list {
+      margin: 0 16px 16px;
+      animation: rise .45s ease backwards;
+      animation-delay: .05s;
+    }
+
+    .bill-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--line-2);
+      border-radius: 16px;
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-xs);
+      transition: transform .15s, box-shadow .2s;
+    }
+
+    .bill-item:active {
+      transform: scale(.99);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bill-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      box-shadow: 0 6px 14px -8px rgba(0, 0, 0, .45);
+    }
+
+    .bill-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bill-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .bill-desc {
+      margin-top: 4px;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .bill-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    .bill-meta .bal {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--ink-3);
+      font-weight: 600;
+    }
+
+    .src-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+
+    .bill-right {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      text-align: right;
+    }
+
+    .bill-amt {
+      font-size: 14.5px;
+      font-weight: 800;
+      font-feature-settings: "tnum";
+      letter-spacing: -.2px;
+      padding-top: 1px;
+    }
+
+    .bill-amt.in {
+      color: var(--green);
+    }
+
+    .bill-amt.out {
+      color: var(--rose);
+    }
+
+    .bill-time {
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    .empty {
+      padding: 40px 16px;
+      text-align: center;
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: var(--muted-2);
+      background: #fff;
+      border-radius: 15px;
+      border: 1px dashed var(--line);
+    }
+
+    /* ================= 底部导航 ================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 414px;
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      padding: 6px 0 calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 0;
+      font-size: 11px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .nav-item.active {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .nav-item .icon {
+      font-size: 22px;
+      stroke-width: 1.9;
+      padding: 3px;
+      border-radius: 50%;
+      color: var(--muted);
+      transition: background .22s, color .2s, transform .22s;
+    }
+
+    .nav-item.active .icon {
+      color: var(--brand);
+      background: rgba(0, 184, 108, .12);
+      transform: translateY(-2px);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-chev-r" viewBox="0 0 24 24">
+        <polyline points="9 6 15 12 9 18" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <line x1="9" y1="13" x2="15" y2="13" />
+        <line x1="9" y1="17" x2="15" y2="17" />
+      </symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24">
+        <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
+        <path d="M16 12h.01" />
+        <path d="M3 7h13a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5" />
+      </symbol>
+      <symbol id="i-swap-v" viewBox="0 0 24 24">
+        <polyline points="8 4 12 8 16 4" />
+        <line x1="12" y1="8" x2="12" y2="16" />
+        <polyline points="16 20 12 16 8 20" />
+      </symbol>
+      <symbol id="i-arrows-lr" viewBox="0 0 24 24">
+        <polyline points="7 8 3 12 7 16" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <polyline points="17 8 21 12 17 16" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </symbol>
+      <symbol id="i-info" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </symbol>
+      <symbol id="i-chev-d" viewBox="0 0 24 24">
+        <polyline points="6 9 12 15 18 9" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol id="i-store" viewBox="0 0 24 24">
+        <path d="M3 9l1.5-5h15L21 9" />
+        <path d="M4 9v11h16V9" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21v-1c0-3.3 3.6-6 8-6s8 2.7 8 6v1" />
+      </symbol>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3 12L12 3l9 9" />
+        <path d="M5 10v10h14V10" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-arrows-ud" viewBox="0 0 24 24">
+        <polyline points="8 8 12 4 16 8" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+        <polyline points="8 16 12 20 16 16" />
+      </symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24">
+        <polyline points="20 12 20 22 4 22 4 12" />
+        <rect x="2" y="7" width="20" height="5" />
+        <line x1="12" y1="22" x2="12" y2="7" />
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="../index.html" title="返回资产首页">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">资产账单</div>
+    <div class="icon-btn" style="visibility:hidden;"></div>
+  </header>
+
+  <!-- ================= 筛选（美团式下拉） ================= -->
+  <div class="filter-bar" id="filterBar">
+    <div class="filter-tab" data-key="asset">
+      <span class="ft-label">资产</span>
+      <svg class="icon i12 ft-caret"><use href="#i-chev-d" /></svg>
+    </div>
+    <div class="filter-tab" data-key="range">
+      <span class="ft-label">时间</span>
+      <svg class="icon i12 ft-caret"><use href="#i-chev-d" /></svg>
+    </div>
+    <div class="filter-tab" data-key="src">
+      <span class="ft-label">来源</span>
+      <svg class="icon i12 ft-caret"><use href="#i-chev-d" /></svg>
+    </div>
+    <div class="filter-mask" id="filterMask"></div>
+    <div class="filter-panel" id="filterPanel"></div>
+  </div>
+
+  <!-- ================= 摘要 ================= -->
+  <section class="summary-card" id="summary"></section>
+
+  <!-- ================= 账单明细 ================= -->
+  <div class="block-label">
+    <div class="lb-left">
+      <svg class="icon i14"><use href="#i-list" /></svg>
+      账单明细
+    </div>
+    <div class="lb-right" id="billCount"></div>
+  </div>
+  <div class="list" id="billList"></div>
+
+  <!-- ================= 底部导航 ================= -->
+  <nav class="bottom-nav">
+    <a class="nav-item active" href="../index.html">
+      <svg class="icon"><use href="#i-wallet" /></svg>
+      <span>资产</span>
+    </a>
+    <a class="nav-item" href="../OTC/OTC寄售.html">
+      <svg class="icon"><use href="#i-user" /></svg>
+      <span>OTC</span>
+    </a>
+    <a class="nav-item" href="../../商城/首页-商城.html">
+      <svg class="icon"><use href="#i-store" /></svg>
+      <span>商城</span>
+    </a>
+    <a class="nav-item" href="../兑换/资产兑换.html">
+      <svg class="icon"><use href="#i-arrows-ud" /></svg>
+      <span>兑换</span>
+    </a>
+    <a class="nav-item" href="../转让/站内转让.html">
+      <svg class="icon"><use href="#i-gift" /></svg>
+      <span>转让</span>
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       状态（与 SWAP 其他页共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v2';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [],
+        myOrders: [],
+        deals: [],
+        records: [],
+        assets: { cp: 5000, vc: 0, cnct: 8.60, redpacket: 10.00 },
+        bills: [
+          { asset: 'CP', src: 'rebate', type: 'in', title: '消费让利 CP 奖励', desc: '商城消费 · 让利额 ¥1000 × 500%', amount: 5000, time: '2026-09-13 10:12', balance: 5000 },
+          { asset: 'GP', src: 'release', type: 'in', title: 'CP 释放', desc: 'CP 余额 × 0.05% 日释放', amount: 2.50, time: '2026-09-13 00:05', balance: 128.00 },
+          { asset: 'GP', src: 'otc', type: 'out', title: 'OTC 挂单冻结', desc: '卖出挂单 G2001 · 冻结中，撤单自动解冻', amount: -100.00, time: '2026-09-13 10:12', balance: 128.00 },
+          { asset: 'CNCT', src: 'exchange', type: 'in', title: 'GP 兑换 CNCT', desc: '10 GP → 9 CNCT（扣 10% 平台服务费）', amount: 9.00, time: '2026-09-12 21:08', balance: 8.60 },
+          { asset: '红包', src: 'subsidy', type: 'in', title: '平台补贴红包', desc: '新人礼包 · 商城红包专区抵扣', amount: 10.00, time: '2026-09-11 09:30', balance: 10.00 },
+          { asset: 'GP', src: 'otc', type: 'out', title: 'OTC 卖出成交', desc: '卖出 120 GP @ $1.05，扣 10% 手续费', amount: -120.00, time: '2026-09-12 08:26', balance: 128.00 },
+          { asset: 'CP', src: 'dividend', type: 'in', title: '创客广告分红', desc: '按小区业绩权重 × 平台让利池 20%', amount: 860.00, time: '2026-09-11 00:10', balance: 5000 },
+          { asset: 'VC', src: 'subsidy', type: 'in', title: '服务商招商 VC 补贴', desc: '订单交易额 × 商家让利比例 × 服务商等级 3%', amount: 45.00, time: '2026-09-10 16:20', balance: 0 },
+          { asset: 'GP', src: 'transfer', type: 'in', title: '站内受赠', desc: '来自 UID 8826 4471 · 免手续费即时到账', amount: 50.00, time: '2026-09-10 11:05', balance: 248.00 },
+          { asset: 'GP', src: 'exchange', type: 'out', title: 'GP 兑换 GV', desc: '10 GP → 0.82 GV（外部 Oracle 实时汇率）', amount: -10.00, time: '2026-09-09 15:40', balance: 128.00 },
+          { asset: 'GP', src: 'release', type: 'in', title: 'CP 释放', desc: 'CP 余额 × 0.05% 日释放', amount: 2.42, time: '2026-09-01 00:05', balance: 125.50 },
+          { asset: 'CP', src: 'dividend', type: 'in', title: '创客广告分红', desc: '按小区业绩权重 × 平台让利池 20%', amount: 720.00, time: '2026-07-20 00:10', balance: 4140 },
+          { asset: 'GP', src: 'otc', type: 'out', title: 'OTC 卖出成交', desc: '卖出 60 GP @ $1.02，扣 10% 手续费', amount: -60.00, time: '2026-05-18 14:22', balance: 190.50 }
+        ]
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && typeof s.gpBalance === 'number') {
+            s.assets = s.assets || { cp: 5000, vc: 0, cnct: 8.60, redpacket: 10.00 };
+            /* 旧数据缺 src（来源类型）→ 用最新种子账单升级 */
+            const fresh = seedState();
+            const hasSrc = Array.isArray(s.bills) && s.bills.length && typeof s.bills[0].src === 'string';
+            s.bills = hasSrc ? s.bills : fresh.bills;
+            return s;
+          }
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      saveState(s);
+      return s;
+    }
+
+    function saveState(s) {
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+    }
+
+    const ST = loadState();
+    ST.assets = ST.assets || { cp: 5000, vc: 0, cnct: 8.60, redpacket: 10.00 };
+
+    const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* ================= 资产字典 ================= */
+    const ASSETS = {
+      CP: { name: 'CP 共献积分', icon: 'CP', bg: 'linear-gradient(135deg,#00b86c,#059669)', desc: '每日释放 0.05%' },
+      GP: { name: 'GP 绿色消费券', icon: 'GP', bg: 'linear-gradient(135deg,#00b86c,#0891b2)', desc: '5 条兑换出口' },
+      VC: { name: 'VC 代金券', icon: 'VC', bg: 'linear-gradient(135deg,#3b82f6,#06b6d4)', desc: '1:1 抵扣' },
+      '红包': { name: '红包', icon: '红包', bg: 'linear-gradient(135deg,#f43f5e,#e11d48)', desc: '部分商品抵扣' },
+      CNCT: { name: 'CNCT 数权宝积分', icon: 'CN', bg: 'linear-gradient(135deg,#8b5cf6,#d946ef)', desc: '跨生态' }
+    };
+
+    /* ================= 来源类型映射 ================= */
+    const SRC_META = {
+      consume:  { t: '消费',     bg: 'var(--line-2)',      fg: 'var(--muted)' },
+      rebate:   { t: '让利',     bg: 'var(--brand-soft)',  fg: 'var(--brand-3)' },
+      dividend: { t: '分红',     bg: 'var(--purple-soft)', fg: 'var(--purple)' },
+      exchange: { t: '兑换',     bg: 'var(--cyan-soft)',   fg: 'var(--cyan)' },
+      transfer: { t: '转让',     bg: 'var(--blue-soft)',   fg: 'var(--blue)' },
+      otc:      { t: 'OTC 撮合', bg: 'var(--rose-soft)',   fg: 'var(--rose)' },
+      subsidy:  { t: '平台补贴', bg: 'var(--amber-soft)',  fg: 'var(--amber)' },
+      release:  { t: '释放',     bg: 'var(--green-soft)',  fg: 'var(--green)' }
+    };
+
+    /* ================= 余额 ================= */
+    function balanceOf(key) {
+      if (key === 'CP') return ST.assets.cp || 0;
+      if (key === 'GP') return ST.gpBalance;
+      if (key === 'VC') return ST.assets.vc || 0;
+      if (key === '红包') return ST.assets.redpacket || 0;
+      if (key === 'CNCT') return ST.assets.cnct || 0;
+      return null; // GV 不入账户
+    }
+
+    /* ================= 当前筛选（美团式下拉） ================= */
+    const QS = new URLSearchParams(location.search);
+
+    const FILTERS = {
+      asset: { label: '资产', opts: [
+        { v: 'ALL', t: '全部' }, { v: 'CP', t: 'CP 共献积分' }, { v: 'GP', t: 'GP 绿色消费券' },
+        { v: 'VC', t: 'VC 代金券' }, { v: '红包', t: '红包' }, { v: 'CNCT', t: 'CNCT 数权宝' }
+      ] },
+      range: { label: '时间', opts: [
+        { v: 'ALL', t: '全部' }, { v: 'd7', t: '近 7 天' }, { v: 'd30', t: '近 30 天' }, { v: 'm3', t: '近 3 月' }
+      ] },
+      src: { label: '来源', opts: [
+        { v: 'ALL', t: '全部' }, { v: 'consume', t: '消费' }, { v: 'rebate', t: '让利' }, { v: 'dividend', t: '分红' },
+        { v: 'exchange', t: '兑换' }, { v: 'transfer', t: '转让' }, { v: 'otc', t: 'OTC 撮合' },
+        { v: 'subsidy', t: '平台补贴' }, { v: 'release', t: '释放' }
+      ] }
+    };
+
+    const sel = { asset: QS.get('asset') || 'ALL', range: 'ALL', src: 'ALL' };
+
+    /* 时间基准：取账单中最新一条时间，避免原型数据随时间失效 */
+    const parseTime = s => new Date(String(s).replace(/-/g, '/')).getTime();
+    const BASE_TIME = (ST.bills || []).reduce((m, b) => Math.max(m, parseTime(b.time) || 0), 0);
+    const RANGE_DAYS = { d7: 7, d30: 30, m3: 90 };
+
+    /* ================= 渲染摘要 ================= */
+    function renderSummary() {
+      const box = document.getElementById('summary');
+      const list = filterBills();
+
+      const income = list.filter(b => b.amount > 0).reduce((s, b) => s + b.amount, 0);
+      const expense = list.filter(b => b.amount < 0).reduce((s, b) => s + Math.abs(b.amount), 0);
+
+      let icon, name, desc, val, unit;
+
+      if (sel.asset === 'ALL') {
+        icon = '总';
+        name = '全部数字资产';
+        desc = '';
+        val = null;
+      } else {
+        const a = ASSETS[sel.asset];
+        const bal = balanceOf(sel.asset);
+        icon = a.icon;
+        name = a.name;
+        desc = a.desc;
+        val = bal;
+        unit = sel.asset;
+      }
+
+      box.innerHTML = `
+        <div class="summary-top">
+          <span class="summary-icon" style="${sel.asset === 'ALL' ? 'background:rgba(255,255,255,.2);' : ''}">${icon}</span>
+          <div style="flex:1;min-width:0;">
+            <div class="summary-name">${name}</div>
+            <div class="summary-desc">${desc}</div>
+          </div>
+        </div>
+        ${val === null
+          ? ''
+          : `<div class="summary-val">
+               <b>${fmt(val)}</b>
+               <span>${unit}</span>
+             </div>`}
+        <div class="summary-foot">
+          <span><i>本期收入</i><b>+${fmt(income)}</b></span>
+          <span><i>本期支出</i><b>-${fmt(expense)}</b></span>
+          <span><i>记录</i><b>${list.length} 条</b></span>
+        </div>`;
+    }
+
+    /* ================= 筛选 ================= */
+    function filterBills() {
+      let list = ST.bills || [];
+      if (sel.asset !== 'ALL') list = list.filter(b => b.asset === sel.asset);
+      if (sel.src !== 'ALL') list = list.filter(b => (b.src || '') === sel.src);
+      if (sel.range !== 'ALL') {
+        const cut = BASE_TIME - RANGE_DAYS[sel.range] * 86400000;
+        list = list.filter(b => (parseTime(b.time) || 0) >= cut);
+      }
+      return list;
+    }
+
+    /* ================= 渲染列表 ================= */
+    function renderBills() {
+      const box = document.getElementById('billList');
+      const list = filterBills();
+
+      document.getElementById('billCount').textContent = `共 ${list.length} 条`;
+
+      if (!list.length) {
+        box.innerHTML = '<div class="empty">没有符合条件的账单</div>';
+        return;
+      }
+
+      box.innerHTML = list.map(b => {
+        const a = ASSETS[b.asset] || ASSETS.GP;
+        const isIn = b.amount >= 0;
+        const sm = SRC_META[b.src] || { t: b.src || '其他', bg: 'var(--line-2)', fg: 'var(--muted)' };
+        return `
+          <div class="bill-item ${isIn ? 'in' : 'out'}">
+            <span class="bill-icon" style="background:${a.bg}">${a.icon}</span>
+            <div class="bill-body">
+              <div class="bill-title">${b.title}</div>
+              <div class="bill-desc">${b.desc || ''}</div>
+              <div class="bill-meta">
+                <span class="src-pill" style="background:${sm.bg};color:${sm.fg}">${sm.t}</span>
+                ${typeof b.balance === 'number'
+            ? `<span class="bal">余额 ${fmt(b.balance)}</span>`
+            : ''}
+              </div>
+            </div>
+            <div class="bill-right">
+              <div class="bill-amt ${isIn ? 'in' : 'out'}">
+                ${isIn ? '+' : ''}${fmt(b.amount)}
+              </div>
+              <div class="bill-time">${b.time}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ================= 下拉筛选交互 ================= */
+    const bar = document.getElementById('filterBar');
+    const mask = document.getElementById('filterMask');
+    const panel = document.getElementById('filterPanel');
+    let openKey = null;
+
+    function tabText(key) {
+      const f = FILTERS[key];
+      if (sel[key] === 'ALL') return f.label;
+      const o = f.opts.find(x => x.v === sel[key]);
+      return o ? o.t : f.label;
+    }
+
+    function renderTabs() {
+      bar.querySelectorAll('.filter-tab').forEach(tab => {
+        const key = tab.dataset.key;
+        tab.querySelector('.ft-label').textContent = tabText(key);
+        tab.classList.toggle('open', openKey === key);
+        tab.classList.toggle('active-sel', sel[key] !== 'ALL');
+      });
+    }
+
+    function openPanel(key) {
+      openKey = key;
+      const f = FILTERS[key];
+      panel.innerHTML = f.opts.map(o =>
+        `<div class="filter-opt ${sel[key] === o.v ? 'active' : ''}" data-v="${o.v}">
+            <span>${o.t}</span>
+            <svg class="icon ft-check"><use href="#i-check" /></svg>
+          </div>`).join('');
+      panel.querySelectorAll('.filter-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          sel[key] = opt.dataset.v;
+          closePanel();
+          renderAll();
+        });
+      });
+      panel.classList.add('show');
+      mask.classList.add('show');
+      renderTabs();
+    }
+
+    function closePanel() {
+      openKey = null;
+      panel.classList.remove('show');
+      mask.classList.remove('show');
+      renderTabs();
+    }
+
+    bar.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const key = tab.dataset.key;
+        if (openKey === key) closePanel();
+        else openPanel(key);
+      });
+    });
+    mask.addEventListener('click', closePanel);
+
+    /* ================= 统一渲染 ================= */
+    function renderAll() {
+      renderSummary();
+      renderBills();
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    /* ================= 初始化 ================= */
+    renderTabs();
+    renderAll();
+  </script>
+</body>
+
+</html>

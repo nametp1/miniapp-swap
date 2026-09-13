@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · 转让记录</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --green-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --purple-border: #ddd6fe;
+      --cyan-border: #a5f3fc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 84px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+    .i22 { font-size: 22px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+      background: var(--bg);
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ================= 筛选 chips ================= */
+    .chips {
+      display: flex;
+      gap: 7px;
+      margin: 0 16px 14px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex-shrink: 0;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all .2s;
+    }
+
+    .chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    /* ================= 汇总卡 ================= */
+    .summary-card {
+      position: relative;
+      overflow: hidden;
+      margin: 0 16px 16px;
+      padding: 18px;
+      border-radius: 20px;
+      color: #fff;
+      background: linear-gradient(135deg, #00b86c 0%, #0891b2 100%);
+      box-shadow: 0 12px 28px -16px rgba(0, 184, 108, .85);
+      animation: rise .45s ease backwards;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .13);
+    }
+
+    .summary-card .k {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      opacity: .92;
+    }
+
+    .summary-grid {
+      position: relative;
+      display: flex;
+      margin-top: 12px;
+    }
+
+    .summary-cell {
+      flex: 1;
+      position: relative;
+    }
+
+    .summary-cell::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 12%;
+      bottom: 12%;
+      width: 1px;
+      background: rgba(255, 255, 255, .22);
+    }
+
+    .summary-cell:last-child::after {
+      display: none;
+    }
+
+    .summary-cell .num {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      font-feature-settings: "tnum";
+    }
+
+    .summary-cell .lab {
+      margin-top: 4px;
+      font-size: 10.5px;
+      opacity: .85;
+    }
+
+    /* ================= 通用块 ================= */
+    .block-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 0 16px 9px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .block-label .lb-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .block-label .lb-left .icon {
+      color: var(--brand);
+    }
+
+    .block-label .lb-right {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ================= 列表 ================= */
+    .list {
+      margin: 0 16px 16px;
+      animation: rise .45s ease backwards;
+      animation-delay: .05s;
+    }
+
+    .tr-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--line-2);
+      border-radius: 16px;
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-xs);
+      transition: transform .15s, box-shadow .2s;
+    }
+
+    .tr-item:active {
+      transform: scale(.99);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tr-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      box-shadow: 0 6px 14px -8px rgba(0, 0, 0, .45);
+    }
+
+    .tr-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tr-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .tr-sub {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    .tr-sub .tag {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--brand-soft);
+      color: var(--brand-3);
+      font-size: 9.5px;
+      font-weight: 700;
+    }
+
+    .tr-right {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      text-align: right;
+    }
+
+    .tr-time {
+      font-size: 10.5px;
+      color: var(--muted-2);
+      font-feature-settings: "tnum";
+    }
+
+    .tr-amt {
+      text-align: right;
+      font-size: 14.5px;
+      font-weight: 800;
+      font-feature-settings: "tnum";
+      letter-spacing: -.2px;
+    }
+
+    .tr-amt.out {
+      color: var(--rose);
+    }
+
+    .tr-amt.in {
+      color: var(--green);
+    }
+
+    .tr-amt i {
+      display: block;
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted-2);
+      margin-top: 3px;
+    }
+
+    .empty {
+      padding: 40px 16px;
+      text-align: center;
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: var(--muted-2);
+      background: #fff;
+      border-radius: 15px;
+      border: 1px dashed var(--line);
+    }
+
+    /* ================= 底部导航 ================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 414px;
+      background: rgba(255, 255, 255, .97);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      padding: 6px 0 calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 0;
+      font-size: 11px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .nav-item.active {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .nav-item .icon {
+      font-size: 22px;
+      stroke-width: 1.9;
+      padding: 3px;
+      border-radius: 50%;
+      color: var(--muted);
+      transition: background .22s, color .2s, transform .22s;
+    }
+
+    .nav-item.active .icon {
+      color: var(--brand);
+      background: rgba(0, 184, 108, .12);
+      transform: translateY(-2px);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-chev-r" viewBox="0 0 24 24">
+        <polyline points="9 6 15 12 9 18" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24">
+        <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
+        <path d="M16 12h.01" />
+        <path d="M3 7h13a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5" />
+      </symbol>
+      <symbol id="i-swap-v" viewBox="0 0 24 24">
+        <polyline points="8 4 12 8 16 4" />
+        <line x1="12" y1="8" x2="12" y2="16" />
+        <polyline points="16 20 12 16 8 20" />
+      </symbol>
+      <symbol id="i-arrows-lr" viewBox="0 0 24 24">
+        <polyline points="7 8 3 12 7 16" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <polyline points="17 8 21 12 17 16" />
+      </symbol>
+      <symbol id="i-store" viewBox="0 0 24 24">
+        <path d="M3 9l1.5-5h15L21 9" />
+        <path d="M4 9v11h16V9" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21v-1c0-3.3 3.6-6 8-6s8 2.7 8 6v1" />
+      </symbol>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3 12L12 3l9 9" />
+        <path d="M5 10v10h14V10" />
+        <path d="M9 20v-6h6v6" />
+      </symbol>
+      <symbol id="i-arrows-ud" viewBox="0 0 24 24">
+        <polyline points="8 8 12 4 16 8" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+        <polyline points="8 16 12 20 16 16" />
+      </symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24">
+        <polyline points="20 12 20 22 4 22 4 12" />
+        <rect x="2" y="7" width="20" height="5" />
+        <line x1="12" y1="22" x2="12" y2="7" />
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="站内转让.html" title="返回站内转让">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">转让记录</div>
+    <div class="icon-btn" style="visibility:hidden;"></div>
+  </header>
+
+  <!-- ================= 筛选 ================= -->
+  <div class="chips" id="trChips">
+    <div class="chip active" data-dir="ALL">全部</div>
+    <div class="chip" data-dir="out">转出</div>
+    <div class="chip" data-dir="in">转入</div>
+  </div>
+
+  <!-- ================= 汇总 ================= -->
+  <section class="summary-card" id="summary"></section>
+
+  <!-- ================= 明细 ================= -->
+  <div class="block-label">
+    <div class="lb-left">
+      <svg class="icon i14"><use href="#i-clock" /></svg>
+      转让明细
+    </div>
+    <div class="lb-right" id="trCount"></div>
+  </div>
+  <div class="list" id="trList"></div>
+
+  <!-- ================= 底部导航 ================= -->
+  <nav class="bottom-nav">
+    <a class="nav-item" href="../index.html">
+      <svg class="icon"><use href="#i-wallet" /></svg>
+      <span>资产</span>
+    </a>
+    <a class="nav-item" href="../OTC/OTC寄售.html">
+      <svg class="icon"><use href="#i-user" /></svg>
+      <span>OTC</span>
+    </a>
+    <a class="nav-item" href="../../商城/首页-商城.html">
+      <svg class="icon"><use href="#i-store" /></svg>
+      <span>商城</span>
+    </a>
+    <a class="nav-item" href="../兑换/资产兑换.html">
+      <svg class="icon"><use href="#i-arrows-ud" /></svg>
+      <span>兑换</span>
+    </a>
+    <a class="nav-item active" href="站内转让.html">
+      <svg class="icon"><use href="#i-gift" /></svg>
+      <span>转让</span>
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       状态（与 SWAP 其他页共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v2';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [], myOrders: [], deals: [], records: [],
+        assets: { vc: 0, cnct: 8.60, redpacket: 10.00 }
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && typeof s.gpBalance === 'number') return s;
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      saveState(s);
+      return s;
+    }
+
+    function saveState(s) {
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+    }
+
+    const ST = loadState();
+    ST.transfers = ST.transfers || [
+      { id: 'TR20260912001', dir: 'out', party: 'UID 8826 5130', uid: '8826 5130', amount: 50, fee: 0, status: 'done', time: '2026-09-12 11:05', balance: 228.00 },
+      { id: 'TR20260910007', dir: 'in', party: 'UID 8826 4471', uid: '8826 4471', amount: 30, fee: 0, status: 'done', time: '2026-09-10 09:22', balance: 198.00 },
+      { id: 'TR20260908003', dir: 'out', party: 'UID 8826 6093', uid: '8826 6093', amount: 20, fee: 0, status: 'done', time: '2026-09-08 16:40', balance: 168.00 }
+    ];
+
+    const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const trimNum = n => (isFinite(n) ? String(parseFloat(Number(n).toFixed(6))) : '');
+
+    const QS = new URLSearchParams(location.search);
+    let current = QS.get('dir') || 'ALL';
+
+    /* ================= 筛选 ================= */
+    function filterList() {
+      const all = ST.transfers || [];
+      return current === 'ALL' ? all : all.filter(t => t.dir === current);
+    }
+
+    /* ================= 汇总 ================= */
+    function renderSummary() {
+      const list = filterList();
+      const out = list.filter(t => t.dir === 'out').reduce((s, t) => s + t.amount, 0);
+      const inn = list.filter(t => t.dir === 'in').reduce((s, t) => s + t.amount, 0);
+
+      document.getElementById('summary').innerHTML = `
+        <div class="k">
+          <svg class="icon i14"><use href="#i-arrows-lr" /></svg>
+          转让汇总 · 0 手续费
+        </div>
+        <div class="summary-grid">
+          <div class="summary-cell">
+            <div class="num">${fmt(out)}</div>
+            <div class="lab">累计转出 GP</div>
+          </div>
+          <div class="summary-cell" style="padding-left:14px;">
+            <div class="num">${fmt(inn)}</div>
+            <div class="lab">累计转入 GP</div>
+          </div>
+          <div class="summary-cell" style="padding-left:14px;">
+            <div class="num">${list.length}</div>
+            <div class="lab">笔数</div>
+          </div>
+        </div>`;
+    }
+
+    /* ================= 列表 ================= */
+    function renderList() {
+      const box = document.getElementById('trList');
+      const list = filterList();
+
+      document.getElementById('trCount').textContent = `共 ${list.length} 笔`;
+
+      if (!list.length) {
+        box.innerHTML = '<div class="empty">该方向暂无转让记录<br><a href="站内转让.html" style="color:var(--brand);font-weight:700;">去转让</a></div>';
+        return;
+      }
+
+      box.innerHTML = list.map(t => {
+        const isOut = t.dir === 'out';
+        return `
+          <div class="tr-item" onclick="location.href='转让详情.html'">
+            <span class="tr-icon" style="background:${isOut ? 'linear-gradient(135deg,#f43f5e,#e11d48)' : 'linear-gradient(135deg,#00b86c,#059669)'}">
+              ${isOut ? '转出' : '转入'}
+            </span>
+            <div class="tr-body">
+              <div class="tr-title">${isOut ? '转给 ' + t.party : '来自 ' + t.party}</div>
+              <div class="tr-sub">
+                <span>UID ${t.uid}</span>
+                <span class="tag">0 手续费</span>
+              </div>
+            </div>
+            <div class="tr-right">
+              <div class="tr-amt ${isOut ? 'out' : 'in'}">
+                ${isOut ? '-' : '+'}${trimNum(t.amount)}
+                <i>GP</i>
+              </div>
+              <div class="tr-time">${t.time}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ================= 交互 ================= */
+    document.querySelectorAll('#trChips .chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('#trChips .chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        current = c.dataset.dir;
+        renderAll();
+      });
+    });
+
+    function renderAll() {
+      renderSummary();
+      renderList();
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    /* ================= 初始化 ================= */
+    document.querySelectorAll('#trChips .chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.dir === current);
+    });
+
+    renderAll();
+  </script>
+</body>
+
+</html>

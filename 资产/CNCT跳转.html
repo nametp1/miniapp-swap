@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>云界数商 · 蚂蚁链地址</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --ink-2: #334155;
+      --ink-3: #475569;
+      --muted: #64748b;
+      --muted-2: #94a3b8;
+      --brand: #00b86c;
+      --brand-2: #00a05b;
+      --brand-3: #008548;
+      --brand-soft: #e6f9f0;
+      --brand-border: #b3ebd0;
+      --green: #059669;
+      --green-soft: #ecfdf5;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --rose: #e11d48;
+      --cyan: #0891b2;
+      --cyan-soft: #ecfeff;
+      --blue: #3b82f6;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --line: #e2e8f0;
+      --line-2: #f1f5f9;
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -18px rgba(15, 23, 42, .14);
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, .08);
+      --green-border: #a7f3d0;
+      --purple-border: #ddd6fe;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --cyan-border: #a5f3fc;
+      --chain-1: #1677ff;
+      --chain-2: #36cfc9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      font-size: 14px;
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .i11 { font-size: 11px; }
+    .i12 { font-size: 12px; }
+    .i14 { font-size: 14px; }
+    .i16 { font-size: 16px; }
+    .i18 { font-size: 18px; }
+    .i20 { font-size: 20px; }
+    .i22 { font-size: 22px; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================= 页头 ================= */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 16px 12px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      flex: 1;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    /* ================= 主卡 ================= */
+    .jump-card {
+      position: relative;
+      overflow: hidden;
+      margin: 6px 16px 16px;
+      padding: 26px 20px 22px;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow-xs);
+      text-align: center;
+      animation: rise .45s ease backwards;
+    }
+
+    .jc-balance {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      padding: 22px 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(22, 119, 255, .08), rgba(54, 207, 201, .12));
+      border: 1px solid rgba(22, 119, 255, .16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6);
+    }
+
+    .jc-balance .k {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .3px;
+    }
+
+    .jc-balance .amt {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-feature-settings: "tnum";
+    }
+
+    .jc-balance b {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -1.2px;
+      background: linear-gradient(135deg, var(--chain-1), var(--chain-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .jc-balance span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--chain-1);
+    }
+
+    /* ================= 地址卡 ================= */
+    .addr-card {
+      margin: 0 16px 16px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .05s;
+    }
+
+    .addr-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .addr-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .addr-label .icon {
+      color: var(--chain-1);
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      background: var(--blue-soft);
+      color: var(--chain-1);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .copy-btn:active {
+      background: #dbeafe;
+    }
+
+    .addr-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--line-2);
+      border: 1px solid var(--line);
+    }
+
+    .addr-box .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--chain-1), var(--chain-2));
+      flex-shrink: 0;
+    }
+
+    .addr-text {
+      font-family: "SF Mono", "Roboto Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      word-break: break-all;
+      letter-spacing: -.2px;
+    }
+
+    .addr-note {
+      margin-top: 10px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--muted-2);
+    }
+
+    /* ================= 划入表单 ================= */
+    .form-card {
+      margin: 0 16px 16px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .1s;
+    }
+
+    .form-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+      margin-bottom: 10px;
+    }
+
+    .amt-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+    }
+
+    .amt-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.5px;
+      font-feature-settings: "tnum";
+      width: 100%;
+    }
+
+    .amt-input::placeholder {
+      color: var(--muted-2);
+      font-weight: 600;
+    }
+
+    .amt-unit {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .all-btn {
+      padding: 6px 12px;
+      border-radius: 9px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .all-btn:active {
+      background: var(--brand-border);
+    }
+
+    .form-hint {
+      margin-top: 10px;
+      font-size: 11.5px;
+      color: var(--muted);
+      font-feature-settings: "tnum";
+    }
+
+    .form-hint b {
+      color: var(--ink-3);
+    }
+
+    .ok-banner {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .ok-banner.show {
+      display: flex;
+      animation: rise .3s ease backwards;
+    }
+
+    /* ================= 说明 ================= */
+    .info-card {
+      margin: 0 16px 16px;
+      padding: 14px 16px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow-xs);
+      animation: rise .45s ease backwards;
+      animation-delay: .15s;
+    }
+
+    .ic-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-2);
+      margin-bottom: 10px;
+    }
+
+    .ic-title .icon {
+      color: var(--chain-1);
+    }
+
+    .ic-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line-2);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--ink-3);
+    }
+
+    .ic-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .ic-row .icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+      color: var(--brand);
+    }
+
+    .ic-row .icon.warn {
+      color: var(--amber);
+    }
+
+    .ic-row b {
+      color: var(--ink);
+    }
+
+    .step-no {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      color: var(--chain-1);
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ================= 按钮 ================= */
+    .primary-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: calc(100% - 32px);
+      margin: 0 16px 10px;
+      padding: 15px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--chain-1) 0%, var(--chain-2) 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 12px 26px -14px rgba(22, 119, 255, .9);
+      transition: transform .15s;
+    }
+
+    .primary-btn:active {
+      transform: scale(.985);
+    }
+
+    .primary-btn:disabled {
+      opacity: .5;
+      box-shadow: none;
+    }
+
+    .ghost-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: calc(100% - 32px);
+      margin: 0 16px 10px;
+      padding: 13px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      color: var(--ink-3);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .ghost-btn:active {
+      transform: scale(.985);
+    }
+
+    .text-btn {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 0 16px 24px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .text-btn:active {
+      color: var(--ink-2);
+    }
+
+    /* ================= Toast ================= */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 60px;
+      transform: translate(-50%, 14px);
+      max-width: 300px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, .92);
+      color: #fff;
+      font-size: 12.5px;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s;
+      z-index: 300;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SVG 图标池 ================= -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="i-chev-l" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="12" height="12" rx="2" />
+        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5" />
+        <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19" />
+      </symbol>
+      <symbol id="i-down" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <line x1="9" y1="13" x2="15" y2="13" />
+        <line x1="9" y1="17" x2="15" y2="17" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= 页头 ================= -->
+  <header class="page-header">
+    <a class="icon-btn" href="../index.html" title="返回资产首页">
+      <svg class="icon i16"><use href="#i-chev-l" /></svg>
+    </a>
+    <div class="page-title">蚂蚁链地址</div>
+    <div class="icon-btn" style="visibility:hidden;"></div>
+  </header>
+
+  <!-- ================= 主卡 ================= -->
+  <section class="jump-card">
+    <div class="jc-balance">
+      <span class="k">可用余额</span>
+      <div class="amt">
+        <b id="cnctBal">8.60</b>
+        <span>CNCT</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 地址卡 ================= -->
+  <section class="addr-card">
+    <div class="addr-head">
+      <div class="addr-label">
+        <svg class="icon i14"><use href="#i-link" /></svg>
+        蚂蚁链收款地址
+      </div>
+      <button class="copy-btn" onclick="copyAddr()">
+        <svg class="icon i12"><use href="#i-copy" /></svg>
+        复制
+      </button>
+    </div>
+    <div class="addr-box">
+      <span class="dot"></span>
+      <span class="addr-text" id="chainAddr">0x</span>
+    </div>
+    <div class="addr-note">该地址为平台为你生成的蚂蚁链专属收款地址，仅用于接收 CNCT 上链资产，请勿向此地址充值其他币种。</div>
+  </section>
+
+  <!-- ================= 划入表单 ================= -->
+  <section class="form-card">
+    <div class="form-label">划入数量</div>
+    <div class="amt-row">
+      <input class="amt-input" id="amtInput" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00">
+      <span class="amt-unit">CNCT</span>
+      <button class="all-btn" onclick="fillAll()">全部</button>
+    </div>
+    <div class="form-hint">可用余额 <b id="availHint">8.60</b> CNCT</div>
+    <div class="ok-banner" id="okBanner">
+      <svg class="icon i14"><use href="#i-check" /></svg>
+      <span id="okText"></span>
+    </div>
+  </section>
+
+  <!-- ================= 操作 ================= -->
+  <button class="primary-btn" id="depositBtn" onclick="deposit()">
+    <svg class="icon i16"><use href="#i-down" /></svg>
+    确认划入
+  </button>
+  <a class="ghost-btn" href="资产账单.html?asset=CNCT">
+    <svg class="icon i14"><use href="#i-list" /></svg>
+    查看数权宝账单
+  </a>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ============================================================
+       状态（与 SWAP 其他页共用）
+       ============================================================ */
+    const OTC_KEY = 'yjss_otc_state_v2';
+
+    function seedState() {
+      return {
+        gpBalance: 128.00,
+        frozenGp: 100.00,
+        market: [], myOrders: [], deals: [], records: [],
+        assets: { vc: 0, cnct: 8.60, redpacket: 10.00 }
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(OTC_KEY);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && typeof s.gpBalance === 'number') {
+            s.assets = s.assets || { vc: 0, cnct: 8.60, redpacket: 10.00 };
+            return s;
+          }
+        }
+      } catch (e) { /* 忽略 */ }
+      const s = seedState();
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(s)); } catch (e) { /* 忽略 */ }
+      return s;
+    }
+
+    const ST = loadState();
+    const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* ================= 生成蚂蚁链地址 ================= */
+    function genAddress() {
+      const hex = '0123456789abcdef';
+      let s = '0x';
+      for (let i = 0; i < 40; i++) s += hex[Math.floor(Math.random() * 16)];
+      return s;
+    }
+
+    if (!ST.chainAddress) {
+      ST.chainAddress = genAddress();
+      try { localStorage.setItem(OTC_KEY, JSON.stringify(ST)); } catch (e) { /* 忽略 */ }
+    }
+
+    const balEl = document.getElementById('cnctBal');
+    const availEl = document.getElementById('availHint');
+    const addrEl = document.getElementById('chainAddr');
+    const inputEl = document.getElementById('amtInput');
+    const btnEl = document.getElementById('depositBtn');
+
+    balEl.textContent = fmt(ST.assets.cnct || 0);
+    availEl.textContent = fmt(ST.assets.cnct || 0);
+    addrEl.textContent = ST.chainAddress;
+
+    /* ================= 复制地址 ================= */
+    function copyAddr() {
+      const txt = ST.chainAddress;
+      const done = () => showToast('蚂蚁链地址已复制');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+      function fallbackCopy() {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { showToast('复制失败，请手动长按复制'); }
+        document.body.removeChild(ta);
+      }
+    }
+
+    /* ================= 全部 ================= */
+    function fillAll() {
+      inputEl.value = (ST.assets.cnct || 0).toFixed(2);
+      inputEl.focus();
+    }
+
+    /* ================= 划入 ================= */
+    let depositing = false;
+    function deposit() {
+      if (depositing) return;
+      const avail = Number(ST.assets.cnct || 0);
+      const amt = parseFloat(inputEl.value);
+      if (!amt || isNaN(amt) || amt <= 0) {
+        showToast('请输入划入数量');
+        return;
+      }
+      if (amt > avail + 1e-9) {
+        showToast('划入数量超过可用余额');
+        return;
+      }
+      depositing = true;
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<svg class="icon i16"><use href="#i-down" /></svg>上链确认中…';
+      showToast('CNCT 正在上链划入蚂蚁链地址…');
+      setTimeout(() => {
+        const left = Math.max(0, avail - amt);
+        ST.assets.cnct = Number(left.toFixed(2));
+        try { localStorage.setItem(OTC_KEY, JSON.stringify(ST)); } catch (e) { /* 忽略 */ }
+        balEl.textContent = fmt(ST.assets.cnct);
+        availEl.textContent = fmt(ST.assets.cnct);
+        inputEl.value = '';
+        document.getElementById('okText').textContent =
+          '已划入 ' + fmt(amt) + ' CNCT，蚂蚁链上链确认成功';
+        document.getElementById('okBanner').classList.add('show');
+        btnEl.disabled = false;
+        btnEl.innerHTML = '<svg class="icon i16"><use href="#i-down" /></svg>确认划入';
+        depositing = false;
+        if (left <= 0) {
+          btnEl.disabled = true;
+          btnEl.style.opacity = '.5';
+        }
+      }, 1100);
+    }
+
+    /* ================= Toast ================= */
+    let toastTimer = null;
+    function showToast(msg, ms) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), ms || 2400);
+    }
+  </script>
+</body>
+
+</html>
